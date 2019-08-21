@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce01603140baf92ac3d4cade1dfc8d1d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    window['skel-prefix'] = "{{ theme_static('monochromed/css/style') }}";
+    console.log(window['skel-prefix']);
+    </script>
+    <title>{% block title %}{% endblock %}-番号本|Tor01</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="msvalidate.01" content="1444735370C480EBF6FEFDA8CED47572" />
+    <meta name="360-site-verification" content="bfd327653260a95669e9d30ea83a1bff" />
+    <meta name="sogou_site_verification" content="YgUXY11FVY"/>
+    <meta name="google-site-verification" content="U3HafQfopm5W4RVxSv-l-griiqZ36FzgoGVty-xgLdQ" />
+
+    <!-- Custom Theme files -->
+    <meta name="description" property="og:description" content="{% block metadesc %}{% endblock %}">
+    <meta name="keywords" content="{% block metakeywords %}{% endblock %}">
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- start menu -->
+    <meta name="referrer" content="{% block metareferrer %}{% endblock %}" />
+
+    <!--link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="{{ theme_static('monochromed/css/google.font.family.css') }}" />
+    <!-- Custom Theme files -->
+    <!-- Monochromed -->
+    <!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+    <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script-->
+    <script type='text/javascript' src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script type='text/javascript' src="{{ theme_static('jquery.lazyload.min.js') }}"></script>
+    <script src="{{ theme_static('monochromed/js/skel.min.js') }}"></script>
+    <script src="{{ theme_static('monochromed/js/skel-panels.min.js') }}"></script>
+    <script src="{{ theme_static('monochromed/js/init.js') }}"></script>
+    <noscript>
+      <link rel="stylesheet" href="{{ theme_static('monochromed/css/skel-noscript.css') }}" media="all" />
+      <link rel="stylesheet" href="{{ theme_static('monochromed/css/style.css') }}" media="all"/>
+    </noscript>
+
+    <!--link href="https://v4.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet"-->
+
+    <!-- the jScrollPane script -->
+    <script type="text/javascript" id="sourcecode">
+        function fanyi(id){
+          no = $("#"+id).attr('no');
+          $.ajax({
+            url:'/fanyiname/'+no
+          }).done(function(e){
+            $("[no='"+no+"']").text(e);
+          }).fail(function(e){
+            console.log(e)
+          });
+        }
+        (function ($) {
+                var ms = {
+                    init: function (totalsubpageTmep, args) {
+                        return (function () {
+                            ms.fillHtml(totalsubpageTmep, args);
+                            ms.bindEvent(totalsubpageTmep, args);
+                        })();
+                    },
+                    //填充html
+                    fillHtml: function (totalsubpageTmep, args) {
+                        return (function () {
+                            totalsubpageTmep = "";
+                            link_to = "javascript:void(0);";
+
+                            // 页码大于等于4的时候，添加第一个页码元素
+                            if (args.currPage != 1 && args.currPage >= 4 && args.totalPage != 4) {
+                                link_to = args.link_to.replace("__id__",1)
+                                totalsubpageTmep += "<li class='page-item ali'><a href='"+link_to+"' class='page-link geraltTb_pager' data-go='' >" + 1 + "</a></li>";
+                            }
+                            /* 当前页码>4, 并且<=总页码，总页码>5，添加“···”*/
+                            if (args.currPage - 2 > 2 && args.currPage <= args.totalPage && args.totalPage > 5) {
+                                totalsubpageTmep += "<li class='page-item ali'><a href='"+link_to+"' class='page-link geraltTb_' data-go='' >...</a></li>";
+                            }
+                            /* 当前页码的前两页 */
+                            var start = args.currPage - 2;
+                            /* 当前页码的后两页 */
+                            var end = args.currPage + 2;
+
+                            if ((start > 1 && args.currPage < 4) || args.currPage == 1) {
+                                end++;
+                            }
+                            if (args.currPage > args.totalPage - 4 && args.currPage >= args.totalPage) {
+                                start--;
+                            }
+                            for (; start <= end; start++) {
+                                if (start <= args.totalPage && start >= 1) {
+                                    link_to = args.link_to.replace("__id__",start)
+                                    if (start == args.currPage)
+                                        totalsubpageTmep += "<li class='page-item ali active'><a href='"+link_to+"' class='page-link geraltTb_pager' data-go='' >" + start + "</a></li>";
+                                    else
+                                        totalsubpageTmep += "<li class='page-item ali'><a href='"+link_to+"' class='page-link geraltTb_pager' data-go='' >" + start + "</a></li>";
+                                }
+                            }
+                            if (args.currPage + 2 < args.totalPage - 1 && args.currPage >= 1 && args.totalPage > 5) {
+                                totalsubpageTmep += "<li class='page-item ali'><a href='"+link_to+"' class='page-link geraltTb_' data-go='' >...</a></li>";
+                            }
+
+                            if (args.currPage != args.totalPage && args.currPage < args.totalPage - 2 && args.totalPage != 4) {
+                                link_to = args.link_to.replace("__id__",args.totalPage)
+                                totalsubpageTmep += "<li class='page-item ali'><a href='"+link_to+"' class='page-link geraltTb_pager' data-go='' >" + args.totalPage + "</a></li>";
+                            }
+                            $(".pagination").html(totalsubpageTmep);
+                        })();
+                    },
+                    //绑定事件
+                    bindEvent: function (totalsubpageTmep, args) {
+                        return (function () {
+                            totalsubpageTmep.on("click", "a.geraltTb_pager", function (event) {
+                                var current = parseInt($(this).text());
+                                ms.fillHtml(totalsubpageTmep, { "currPage": current, "totalPage": args.totalPage, "turndown": args.turndown });
+                                if (typeof (args.backFn) == "function") {
+                                    args.backFn(current);
+                                }
+                            });
+                        })();
+                    }
+                }
+                $.fn.createPage = function (options) {
+                    ms.init(this, options);
+                }
+            })(jQuery);
+    </script>
+</head>
+
+{# 面包屑导航开始 #}
+{# notself为真则不加链接，用于栏目页 #}
+{% macro nav_by_category(category, notself=False) -%}
+{% for cate in category.parents -%}
+{% if notself and cate == category %}{{ cate.name }}{% else %}<a href="{{ cate.link }}">{{ cate.name }}</a>{% endif %}{% if not loop.last %}<b>&#187;</b>{% endif %}
+{% endfor -%}
+{%- endmacro %}
+{# 面包屑导航结束 #}
+
+{# LOGO部分代码开始 #}
+{% macro logo() -%}
+<a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a>
+{% endmacro %}
+{# LOGO部分代码结束 #}
+
+{# 定义导航菜单 #}
+{% set navigation_bar = [
+    (url_for('main.index'), 'index', 'Home'),
+    (url_for('main.topics'), 'topics', 'Topics'),
+    (url_for('main.tags'), 'tags', 'Tags'),
+    (url_for('main.flatpage', slug='about'), 'about', 'About'),
+] -%}
+{% set active_page = active_page|default('index') -%}
+<body class="homepage">
+    <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
+
+
+      <div>
+        <form action="{{ url_for('main.search') }}" method="GET">
+          <div>
+            <input type="text" value="Search..." onfocus="if (value =='Search...'){value =''}" onblur="if (value ==''){value='Search...'}" name="keyword" id="keyword" />
+            <input type="submit" id="searchsubmit" value="" />
+          </div>
+        </form>
+      </div>
+
+    <!-- Header -->
+			<header id="header">
+				<div class="container">
+        <!-- Logo -->
+          <div id="logo">
+            <h1><a href="/">番号本</a></h1>
+            <span>番号本——最全番号</span>
+          </div>
+					<nav id="nav">
+						<ul>
+  						<li class="active"><a href="/">首页</a></li>
+  						<li><a href="/fhs">番号大全</a></li>
+  						<li><a href="/topics">女优排行</a></li>
+  						<li><a href="/category">番号系列</a></li>
+						</ul>
+					</nav>
+					<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+				</div>
+			</header>
+
+    <!-- header -->
+    {% block header %}{% endblock%}
+    <!-- content -->
+  		<div id="main">
+  			<div class="container">
+
+        {% block crumbwrap %}<div class="crumb"><a href="{{ url_for('main.index') }}">Home</a><b>&#187;</b>{% block crumb %}{% endblock %}</div>{% endblock %}
+
+        {% block body %}
+          <div class="article" id="article-1859">
+            <ul class="date">
+              <li class="day">13</li>
+              <li class="month">Oct</li>
+            </ul>
+
+            <div class="title">
+              <h2 class="topic"><a href="/archives/1859.html" rel="bookmark" title="Permanent Link to Ubuntu Tweak 0.8.6 正式发布：支持Ubuntu 13.10">Ubuntu Tweak 0.8.6 正式发布：支持Ubuntu 13.10</a></h2>
+              <span class="postmeta">Post by TualatriX at 2013 . Category: <a href="/archives/category/applications/">Applications</a>.  359 Views. <a href="/archives/1859.html#comments">2 Comments </a> </span></div>
+
+            <div class="clear"></div>
+            <div class="entry">
+
+              <p> <a href="/archives/1859.html#more-1859">Read More...</a>
+
+            </div>
+          </div>
+        {%endblock%}
+        </div>
+      </div>
+    <!-- footer_top -->
+    <div id="footer">
+    {% block footertop %}
+    {% endblock%}
+    </div>
+    <script>
+      $(function() {
+          $("img.lazy").lazyload({effect: "fadeIn"});
+      });
+    </script>
+</body>
+
+</html>

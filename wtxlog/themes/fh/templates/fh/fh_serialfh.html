@@ -1,0 +1,103 @@
+{% extends "fh/fhbase.html" %}
+{% block title %}{{publisher}}系列番号{{ year }}-第{{curpage}}页{% endblock %}
+{% block metadesc %}{{publisher}}系列番号{{ year }}-第{{curpage}}页{% endblock %}
+{% block metakeywords %}{{publisher}}系列番号{% endblock %}
+{%block body%}
+<div class="row">
+    <div id='content' class="9u">
+      <section>
+        <header>
+            <h2><a href="/publishers">番号系列</a>{%if publisher%}{{'-'+publisher or ''}}{%endif%}作品{{total}}部<span></span> </h2>
+        </header>
+        <section>
+          <div class="row">
+            <span></span>
+            <div class="pubtag-row" style="vertical-align:sub;">
+              {% for tag in tag_order%}
+                {%set key = tag[0]%}
+                {%set size = tags[tag[0]][1]%}
+                {%set count = tag[1]%}
+                {% if loop.index > 10 %}
+                  {% set tags_visiable = 'tags-ext'%}
+                {% endif%}
+                <a href="/publisher_tag/{{publisher}}/{{key}}">
+                <div class="tags {{tags_visiable}}"
+                  style="display:inline-block;margin:4px;height:{{size}}px;"><span style='font-size:{{size}}px;display:inline-block;margin:2px;padding:2px;height:{{size}}px;'>{{key}}[{{count}}部]</span>
+                </div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% if tag_order|length > 10 %}
+            <button id="hd-tags">显示全部标签</button>
+          {% endif%}
+        </section>
+
+        {%if year %}
+          {%set pageurl = "/publisher_date/"+publisher|urlencode|replace('/','[_]')|e|safe+"/"+year+"/__id__"%}
+        {%elif tag %}
+          {%set pageurl = "/publisher_tag/"+publisher|urlencode|replace('/','[_]')|e|safe+"/"+tag+"/__id__"%}
+        {%else%}
+          {%set pageurl = "/publisher/"+publisher|urlencode|replace('/','[_]')|e|safe+"/__id__"%}
+        {%endif%}
+
+        {% include 'fh/_fhlist.html'%}
+
+      </section>
+      <section>
+        <header>
+            <h2>为您推荐番号<span></span> </h2>
+        </header>
+        {%set fanhaolist = recomm_fhs %}
+        {% include 'fh/_fhlist.html'%}
+      </section>
+    </div>
+    <div id="sidebar" class="3u">
+        <section class="sky-form">
+            <div class="header_bg">
+              {% include 'fh/_search_side.html'%}
+            </div>
+            <header>
+              <h2>发行时间</h2>
+            </header>
+            <div class="row1 scroll-pane">
+                <div class="col col-4">
+                    <a href="/publisher/{{publisher|urlencode|replace('/','[_]')|e|safe}}"><button>全部</button></a>
+                </div>
+                <div class="col col-4">
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2018"><button>2018</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2017"><button>2017</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2016"><button>2016</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2015"><button>2015</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2014"><button>2014</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2013"><button>2013</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2012"><button>2012</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2011"><button>2011</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2010"><button>2010</button></a>
+                    <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2009"><button>2009</button></a>
+                </div>
+            </div>
+        </section>
+        <div class="w_sidebar">
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+  (function(){
+    $(".pubtag-row .tags-ext").hide();
+    $("#hd-tags").click(function(){
+      if($(this).attr('tags-visiable') && $(this).attr('tags-visiable') == 'true')
+      {
+        $(".pubtag-row .tags-ext").hide();
+        $(this).attr('tags-visiable','false')
+      }
+      else
+      {
+        $(".pubtag-row .tags-ext").show();
+        $(this).attr('tags-visiable','true')
+      }
+    });
+  })()
+</script>
+{%endblock%}

@@ -1,0 +1,124 @@
+{% extends "fh/fhbase.html" %}
+{% block title %}{{cast['name']}}合集{{total}}部番号-第{{ curpage }}页{% endblock %}
+{% block metakeywords %}{{cast['name']}},{{",".join(cast['tags'])}},番号合集{% endblock %}
+{% block metadesc %}
+{{cast['name']}},别名{{cast['alias']|truncate(20)}}
+{%if cast.castdate%}{{','+cast['castdate']+'出道至今的'}}{%endif%}{%if fhlist|length > 0%}{{''+ total|string +'部番号:'}}{%endif%}
+{%if fhlist|length > 0%}{%for fh in fhlist%}{%if loop.index < 5 %}{{ fh.name_jp or '' }}{%endif%}{%endfor%}{%endif%}
+{% endblock %}
+
+{%block body%}
+<div class="row">
+    <input type="hidden" class="indextype" value="{{ indextype }}" />
+
+    <div id="content" class="9u skel-cell-important">
+        <div class="row">
+            <div class="4u">
+                <img class="image full" src="{{cast['img']}}" alt="{{cast['name']}}"/>
+            </div>
+            <div class="8u">
+                <header>
+                  <h2>{{cast['name']}}</h2>
+                </header>
+                <div class="">
+                    <p><strong>别名：</strong>{{cast['alias']}}</p>
+                </div>
+                <div class="">
+                    <p><strong>三围：</strong>{{cast['body']}}</p>
+                </div>
+                <div class="">
+                    <p><span class="card-text"><strong>出生日期：</strong>{{cast['birthdate']}}</span><br /></p>
+                </div>
+                <div class="">
+                    <p><span class="card-text"><strong>出道时间：</strong>{{cast['castdate']}}</span><br /></p>
+                </div>
+                <div class="">
+                    <p><strong>点赞：</strong>{{cast['hot']}}</p>
+                </div>
+
+                <span class="card-text">
+                    {% for c in cast.tags %}
+                      <a href="/casts_tag/{{c}}"><span class="badge badge-primary">{{c}}</span></a>
+                    {%endfor%}
+                </span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <section>
+            <header>
+              <h2>演员介绍</h2>
+            </header>
+            <p><span class="byline">{{cast['desc']}}</span></p>
+        </section>
+        <div class="divider"></div>
+        <section>
+          {%set fanhaolist = fhlist%}
+          {%set pagelink = "/cast/"+cast['name'] %}
+            <header>
+              <h2>{{cast['name'] + '参演番号'}}</h2>
+            </header>
+            {% include 'fh/_fhlist.html'%}
+        </section>
+        <div class="divider"></div>
+        <section>
+            <header>
+              <h2>为您推荐番号</h2>
+            </header>
+            {%set fanhaolist = recomm_fhs %}
+            {% include 'fh/_fhlist.html'%}
+        </section>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="3u">
+        <div class="header_bg">
+          {% include 'fh/_search_side.html'%}
+        </div>
+        <div class="w_sidebar">
+            <div class="w_nav1">
+                <header>
+                  <h2>栏目</h2>
+                </header>
+                <ul>
+                    <li><a href="/fhs">番号大全</a></li>
+                    <li><a href="/casts">女优大全</a></li>
+                    <li><a href="/publishers">番号系列</a></li>
+                </ul>
+            </div>
+            <section>
+                <header>
+                  <h2>为您推荐女优</h2>
+                </header>
+    						<ul class="style1">
+                {%for mi in recomm_cast %}
+                <li>
+                  <a href="/cast/{{mi.name}}" target="_blank"><img src="{{mi.img}}" width="78" height="110" alt="{{mi.name}}"></a>
+									<p><a href="/cast/{{mi.name}}" target="_blank">{{mi.name}}</a></p>
+									<p>
+                    {%for tag in mi.tags %}{{tag}}|{%endfor%}
+                  </p>
+									<p class="posted">{{mi.castdate}}  |  {{mi.hot}}</p>
+                </li>
+                {%endfor%}
+							  </ul>
+
+
+            </section>
+        </div>
+    </div>
+
+
+    <script>
+        $(function () {
+            var page = {{ curpage }};
+            if (!page)
+                page = 1;
+            $(".pagination").createPage({
+                totalPage: {{ pages }},
+                currPage: page,
+                link_to:"/cast/{{cast['name']}}/__id__"
+            });
+        })
+    </script>
+</div>
+{%endblock%}

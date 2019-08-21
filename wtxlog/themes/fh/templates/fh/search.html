@@ -1,0 +1,107 @@
+{% extends "fh/fhbase.html" %}
+{% block title %}'{{words}}'的查询结果{% endblock %}
+{% block metakeywords %}{% endblock %}
+{% block metadesc %}
+{% endblock %}
+
+{%block body%}
+<div class="row">
+  <div id="content" class="9u skel-cell-important">
+      {%if casts|length > 0%}
+      <div class="divider"></div>
+        <header>
+          <h2>查询到名字匹配 '{{words}}' 的女优</h2>
+        </header>
+        <section>
+        {% for mi in casts%}
+            {% if (loop.index - 1) % 4 == 0%}
+            <div class="row">
+              {%endif%}
+              <div class="3u">
+    						<section>
+                      <div class="image full">
+                          <a href="/cast/{{mi['name']}}" class="vimage full" target="_blank">
+                              <img class="lazy" data-original="{{mi.img}}" alt="{{mi['name']}}" />
+                          </a>
+                      </div>
+                      <h4><a target="_blank" href="/cast/{{mi['name']}}">{{mi['name']}}</a></h4>
+                      <p><strong>点赞：</strong>{{mi['hot']}}</p>
+                      <p>{{mi['tags']|join(' ')}}</p>
+                </section>
+              </div>
+              {% if (loop.index) % 4 == 0 or loop.last %}
+            </div>
+            {%endif%}
+            <!-- Product -->
+        {% endfor %}
+        </section>
+      {%endif%}
+
+      {% if fhs|length > 0%}
+      <div class="divider"></div>
+        <header>
+          <h2>查询到 '{{words}}' 出演的番号</h2>
+        </header>
+        <section>
+        {% set fanhaolist = fhs %}
+        {% include 'fh/_fhlist.html'%}
+        </section>
+      {%endif%}
+
+      {% if fhs_tag|length > 0%}
+      <div class="divider"></div>
+        <header>
+          <h2>查询到标签为 '{{words}}' 的番号</h2>
+        </header>
+        <section>
+        {% set fanhaolist = fhs_tag %}
+        {% include 'fh/_fhlist.html'%}
+        </section>
+      {%endif%}
+
+  </div>
+    <input type="hidden" class="indextype" value="{{ indextype }}" />
+    <div id="sidebar" class="3u">
+        <div class="header_bg">
+          {% include 'fh/_search_side.html'%}
+        </div>
+        <div class="w_sidebar">
+            <div class="w_nav1">
+                <h4>All</h4>
+                <ul>
+                    <li><a href="/fhs">番号大全</a></li>
+                    <li><a href="/casts">女优排行</a></li>
+                    <li><a href="/publishers">番号系列</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var page = {{ curpage }};
+            var year = '{{ year }}';
+            var tag = '{{ tag }}';
+            if (!page)
+                page = 1;
+            pageurl = "";
+
+            if(year)
+            {
+                pageurl = "/casts_date/{{year}}/__id__";
+            }
+            else if(tag)
+            {
+                pageurl = "/casts_tag/{{tag}}/__id__";
+            }
+            else {
+                pageurl = "/casts/__id__";
+            }
+            $(".pagination").createPage({
+                totalPage: {{ pages }},
+                currPage: page,
+                link_to: pageurl
+        		});
+        })
+    </script>
+</div>
+{%endblock%}

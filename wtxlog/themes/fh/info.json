@@ -1,0 +1,9 @@
+{
+    "application": "wtxlog",
+    "identifier": "fh",
+    "name": "fh theme",
+    "author": "lh",
+    "description": "fh.me theme",
+    "license": "MIT/X11",
+    "doctype": "html5"
+}

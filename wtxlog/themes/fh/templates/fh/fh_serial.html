@@ -1,0 +1,59 @@
+{% extends "fh/fhbase.html" %}
+{% block title %}番号系列{% endblock %}
+{% block metakeywords %}番号系列,发行商,
+    {% for mi in publist%}{% if loop.index <10%}{{mi['pub']+','}}{%endif%}{% endfor %}{% endblock %}
+{% block metadesc %}所有番号系列及包含的番号数量，{% for mi in publist%}{% if loop.index <10%}{{mi['pub']+','}}{%endif%}{% endfor %}{% endblock %}
+{%block body%}
+<div class="row">
+    <input type="hidden" class="indextype" value="{{ indextype }}" />
+    <section>
+        <header>
+            <h2>番号系列<span></span>
+              <input id="pub_filter" style="display:inline-block" name="words" value="" placeholder="输入系列名称" type="text">
+            </h2>
+            <div class="">
+              <div class="menu">
+                <a href="/publishers/ordertag" class="menu-item">按标签分组</a>
+                <a href="/publishers/ordernum" class="menu-item">按收录量分组</a>
+                <a href="/publishers" class="menu-item active">不分组</a>
+              </div>
+            </div>
+        </header>
+        <div class="divider"></div>
+        <section>
+            <ul class="default row">
+            {% for mi in publist%}
+              <li class="3u pub_tag" tag_name="{{mi['pub']}}">
+                <a class="button small" name="{{mi['pub']}}" count="{{mi['count']}}" target="_blank" href="/publisher/{{mi['pub']|urlencode|replace('/','[_]')|e|safe}}">{{mi['pub']}} [<span class="badge">{{mi['count']}}部</span>]
+                </a>
+              </li>
+            {% endfor %}
+            </ul>
+        </section>
+        <!-- Product -->
+    </section>
+</div>
+
+<script>
+  (function(){
+    var tag_filter = function(e){
+      v_t = $(this).val();
+      $(".pub_tag").each(function(i,t,s)
+      {
+        if($(t).attr('tag_name').toUpperCase().indexOf(v_t.toUpperCase()) < 0)
+          $(t).hide();
+        else
+          $(t).show();
+      })
+    }
+    $("#pub_filter").change(tag_filter);
+    //$("#pub_filter").enter(tag_filter);
+    $('#pub_filter').keydown(function(e){
+        if(e.keyCode==13){
+            tag_filter(); //处理事件
+        }
+    });
+
+  })()
+</script>
+{%endblock%}

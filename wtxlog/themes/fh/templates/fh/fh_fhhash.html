@@ -1,0 +1,186 @@
+{% extends "fh/fhbase.html" %}
+{% block title %}{{fh.no}}-{{cast}}-{{fh['publisher']}}{% endblock %}
+{% block metakeywords %}番号[{{fh['no']}}],{{fh.name}}{% endblock %}
+{% block metadesc %}
+  [{{fh['no']}}]{{fh.name}}，
+  {%if fh.cast|length > 0 %}
+    由演员{{fh.cast|join(',')}},别名{{fh.alias}}出演,
+  {%endif%}
+  {%if fh.tags|length > 0 %}
+    影片标记为{{fh.tags|join(',')}},
+  {%endif%}
+  {%if fh['desc']%}{{''+fh['desc']}}{%endif%}
+  {%if fh['publisher']%}{{'由'+fh['publisher']}}{%endif%}
+  {%if fh['issuedate']%}{{'发行于'+fh['issuedate']+','}}{%endif%}
+  提供磁力链接下载地址
+{% endblock %}
+
+{%block body%}
+<div class="row">
+    <div name='content' class="9u">
+        <header>
+            <h2><strong>番号：</strong>{{fh.no}}</h2>
+        </header>
+        <section>
+          <div class="row">
+              <div class="4u">
+                  <img class="image full" src="{{fh.img}}" alt="{{fh.no}}"/>
+              </div>
+              <div class="8u">
+                  <ul>
+                      <li>
+                        <p><strong>片名：</strong>{{article.title}}</span></p>
+                      </li>
+                      <li>
+                          <p><strong>演出：</strong>
+                            {% for c in fh.cast %}
+                              <a target="_blank" style="display:inline" href="/cast/{{c}}">{{c}}</a>
+                            {%endfor%}</p>
+                      </li>
+                      <li><span>
+                        <p><strong>片商：</strong>{% if fh.publisher %}<a target="_blank" style="display:inline" href="/publisher/{{fh.publisher|replace('/','[_]')}}">{{fh.publisher}}</a>{%endif%}</span></p>
+                      </li>
+                      <li>
+                        <p><strong>时长：</strong>{{fh.duration or ''}}</span></p>
+                      </li>
+                      <li><p><strong>发行：</strong>{{fh.issuedate or ''}}</p></li>
+                      <li><p><strong>点赞：</strong>{{fh.hot or ''}}</p></li>
+                      <li>
+                        <p><strong>标签：</strong>
+                        {% for c in fh.tags %}
+                        <a href="/fhs_tag/{{c}}" title="{{c}}" target="_blank"
+                          style="display:inline-block;padding:1px"><span class="badge badge-success">{{c}}</span></a>
+                        {%endfor%}</p>
+                      </li>
+                  </ul>
+              </div>
+              <section class="sky-form">
+                <h4>演出</h4>
+                <ul class="style1">
+                    {% for c in castsDetail %}
+                      <li style='display:inline-block'><a href="/cast/{{c['name']}}" title="{{c['name']}}" target="_blank"
+                        style="padding:1px"><img title="{{c['name']}}" alt="{{c['name']}}" width="78" src="{{c['img']}}"/></a></li>
+                    {%endfor%}
+                </ul>
+              </section>
+          </div>
+        </section>
+        {% if article.body_html %}
+          <section>
+            <header>
+              <h3>影片简介</h3>
+            </header>
+            <section>
+              {{article.body_html|safe}}
+            </section>
+          </section>
+        {% endif%}
+        {% if fh.prev_img %}
+          <section>
+            <header>
+              <h3>预览</h3>
+            </header>
+            <section>
+              {%for img in fh.prev_img%}
+          			{% if (loop.index - 1) % 2 == 0%}
+          				<div class="row">
+          			{%endif%}
+      					<div class="6u">
+  								<div class="image full">
+  									<img class="lazy" data-original="{{img}}" />
+  								</div>
+      					</div>
+      				{% if (loop.index) % 2 == 0 or loop.last %}
+      				</div>
+      				{%endif%}
+              {%endfor%}
+            </section>
+          </section>
+        {% endif%}
+        <div class="divider"></div>
+        <section>
+          <div class="row">
+            <header>
+              <h4>{{fh.no}} / 磁力链接下载 <span></span></h4>
+            </header>
+          </div>
+          <ul class="style1">
+            <li>链接1：<a href="{{ config['MAG_DOWNLOAD_SITE1'] }}/search?word={{fh.no}}" target="_blank">在磁力风搜索此部作品</a></li>
+            <li>链接2：<a href="{{ config['MAG_DOWNLOAD_SITE2'] }}/search?word={{fh.no}}&page=1" target="_blank">在cilimao搜索此部作品</a></li>
+          </ul>
+          <div class="row">
+              <p>本站不提供下载，只提供跳转。可能会遇到下载网站打不开的情况。</p>
+          </div>
+        </section>
+        <div class="divider"></div>
+        {%for fhs in link_cast_fhs %}
+          <section>
+              <header>
+                <h2><a href="/cast/{{fhs['cast']}}" target="_blank">{{fhs['cast']}}</a> 出演的其他番号</h2>
+              </header>
+              <p><a class="button" href="/cast/{{fhs['cast']}}">{{fhs['cast']}} | 全部番号{{fhs['total']}}部</a></p>
+              {%set fanhaolist = fhs['items']%}
+              {%include 'fh/_fhlist.html'%}
+          </section>
+        {%endfor%}
+        <div class="divider"></div>
+        <section>
+            <header>
+              <h2>{{fh.publisher}}系列其他番号</h2>
+            </header>
+            <p><a class="button" href="/publisher/{{fh.publisher|replace('/','[_]')}}">{{fh.publisher}}系列 | 全部番号{{link_pub_fhs['total']}}部</a></p>
+            {%set fanhaolist = link_pub_fhs['items']%}
+            {%include 'fh/_fhlist.html'%}
+            <div class="clearfix"></div>
+        </section>
+    </div>
+    <div id="sidebar" class="3u">
+        <div class="header_bg">
+          {% include 'fh/_search_side.html'%}
+        </div>
+
+    </div>
+    <script>
+        $(function () {
+            return;
+            var turl = "https://api.douban.com/v2/movie/in_theaters";
+            var indextype = $(".indextype").val();
+            if (indextype == "top250") {
+                turl = "https://api.douban.com/v2/movie/top250?start=0&count=50";
+            }
+            else if (indextype == "theaters") {
+                turl = "https://api.douban.com/v2/movie/in_theaters";
+            }
+            $.ajax({
+                url: turl,
+                type: 'GET',
+                dataType: 'JSONP', // 处理Ajax跨域问题
+                success: function (data) {
+                    $('.indextitle').text(data.title)
+                    for (var mi in data.subjects) {
+                        mi = data.subjects[mi];
+                        var $miTemp = $(
+                            '<div class="col-sm-2"> \
+                <div class="card" style="width: 165;height:320; margin:12px;"> \
+                  <a class="movielink" target="_blank"><img class="card-img-top" style="height:200;" src="..." alt="Card image cap"></a> \
+                  <div class="card-body"> \
+                    <a class="movielink" target="_blank"><p class="card-title">Card title</p></a> \
+                    <p class="card-text"></p> \
+                  </div> \
+              </div></div>');
+                        $miTemp.find('.card-title').text(mi.title);
+                        $miTemp.find('.card-img-top').attr("src", mi.images.small);
+                        for (var i in mi.genres) {
+                            var tag = mi.genres[i];
+                            $miTemp.find('.card-text').append($('<span class="badge badge-primary" style="margin:2px">' + tag + '</span>'))
+                        }
+                        $miTemp.find('.movielink').attr("href", "http://www.tor01.com/search?word=" + encodeURIComponent(mi.title));
+
+                        $('div[name="douban"]>div').append($miTemp);
+                    }
+                }
+            });
+        });
+    </script>
+</div>
+{%endblock%}

@@ -1,0 +1,49 @@
+
+  <input type="hidden" class="indextype" value="{{ indextype }}"/>
+		{% for mi in articles%}
+			{% if (loop.index - 1) % 4 == 0%}
+				<div class="row">
+			{%endif%}
+					<div class="3u">
+						<section>
+								<div class="image full">
+									<a href="/fhhash/{{mi['no']}}/{{mi['cast'][0]}}" target="_blank">
+									<img class="lazy" data-original="{{mi.img}}" alt="{{mi['no']}}|{{mi['cast'][0]}}" />
+								</div>
+							<h4><a target="_blank" href="/fhhash/{{mi['no']}}/{{mi['cast'][0]}}">{{mi['no']}}</a></h4>
+							<p>{{article.created|date('%Y-%m-%d')}}|<strong>点赞：</strong>{{mi['hot'] or ''}}</p>
+							<p id="name_{{mi['id'] + 9878901231}}" no="{{mi['no']}}">{{article.title|emphasis(keyword)|safe or '[暂无片名]'}}</p>
+              {% if article.title%}
+                <button text="" onclick="javascript:fanyi('name_{{mi['id'] + 9878901231}}')">翻译中文</button>
+              {%endif%}
+						</section>
+					</div>
+				{% if (loop.index) % 4 == 0 or loop.last %}
+				</div>
+				{%endif%}
+			<!-- Product -->
+		{% endfor %}
+	<nav aria-label="document list paging" id="docpagi" max-size="5">
+		<ul class="pagination pagination-md pagination-flush">
+		</ul>
+	</nav>
+  <script>
+  	$(function(){
+  		var page = {{curpage}};
+      var pageurl = "{{pageurl}}";
+      if(!pageurl)
+      {
+        pageurl = "/fhs/__id__";
+      }
+
+  		if(!page)
+      {
+  			page = 1;
+      }
+  		$(".pagination").createPage({
+  				totalPage:{{pages}},
+  				currPage:page,
+  				link_to:pageurl
+  		});
+  	})
+  	</script>

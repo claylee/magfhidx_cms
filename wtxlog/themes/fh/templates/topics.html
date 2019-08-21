@@ -1,0 +1,53 @@
+{% extends theme('layout.html') %}
+{% set active_page = "topics" %}
+
+{% block title %}女优排行{% endblock %}
+
+{% block head_extend -%}
+  <link rel="canonical" href="{{ url_for('main.topics', _external=True) }}" />
+  <meta name="mobile-agent" content="format=html5;url={{ url_for('main.topics', _external=True) }}"/>
+  <meta name="mobile-agent" content="format=xhtml;url={{ url_for('main.topics', _external=True) }}"/>
+{%- endblock %}
+
+{% block crumb %}女优排行{% endblock %}
+
+{% block body %}
+<div class="row">
+<div id="content" class="post 9u skel-cell-important">
+  <header>
+    <h2 class="">女优排行</h2>
+  </header>
+  <div class="entry">
+
+    {% with topics = _topics %}
+    {% for mi in topics -%}
+        {% if (loop.index - 1) % 4 == 0%}
+        <div class="row">
+        {%endif%}
+        <div class="3u">
+          <section>
+                <div class="image full">
+                    <a href="/cast/{{mi.name}}" class="vimage full" target="_blank">
+                        <img class="lazy" data-original="{{mi.thumbnail}}" alt="{{mi.name}}" />
+                    </a>
+                </div>
+                <h4><a target="_blank" href="/cast/{{mi.name}}">{{mi.name}}</a></h4>
+                <p><strong>点赞：</strong>{{mi.id}}</p>
+                <p>{{mi['tags']|join(' ')}}</p>
+          </section>
+        </div>
+        {% if (loop.index) % 4 == 0 or loop.last %}
+        </div>
+        {%endif%}
+        <!-- Product -->
+    {% endfor %}
+    <ul class="clearfix">
+    {% for topic in topics -%}
+    <li><a href="{{ topic.link }}">{{ topic.name }}</a></li>
+    {%- endfor %}
+    </ul>
+    {% endwith %}
+  </div>
+</div>
+</div>
+{% endblock %}

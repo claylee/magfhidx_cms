@@ -1,0 +1,40 @@
+{% extends theme('layout.html') %}
+{% block title %}{{year}}番号大全-第{{curpage}}页{% endblock %}
+{% block metadesc %}番号大全热度排行{% endblock %}
+{% block metakeywords %}番号大全热度排行{% endblock %}
+{%block body%}
+<input type="hidden" class="indextype" value="{{ indextype }}"/>
+<div class="row">
+  <div id="content" class="9u skel-cell-important">
+    <section>
+      <header>
+        <h2>番号大全</h2>
+      </header>
+          <div class="divider"></div>
+          {% include theme('_fhlist.html') %}
+
+    </section>
+  </div>
+  <div id="sidebar" class="3u">
+    <section>
+        <div class="header_bg">
+        </div>
+        <div class="divider"></div>
+        <header>
+          <h4>随机推荐</h4>
+        </header>
+        <div class="default">
+          <section>
+          <ul class="style1">
+          </ul>
+        </section>
+        </div>
+    </section>
+    <div class="divider"></div>
+  </div>
+</div>
+  <script>
+
+  	</script>
+</div>
+{% endblock %}
