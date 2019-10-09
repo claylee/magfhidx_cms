@@ -6,7 +6,6 @@ __pycache__/
 *.swp
 
 # sqlite database files
-*.db
 *.sqlite
 
 # C extensions
