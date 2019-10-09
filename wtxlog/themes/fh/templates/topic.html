@@ -48,6 +48,10 @@
             <header>
               <h2>{{topic.name + '参演番号'}}</h2>
             </header>
+            {% for a in articles%}
+              {{a.name}}
+            {% endfor %}
+            {%set fanhaolist = articles %}
             {% include theme('_fhlist.html')%}
         </section>
         <div class="divider"></div>

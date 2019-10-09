@@ -9,12 +9,12 @@
 					<div class="3u">
 						<section>
 								<div class="image full">
-									<a href="/fhhash/{{mi['no']}}/{{mi.tag}}" target="_blank">
+									<a href="/fhhash/{{mi['id']}}/{{mi.tag}}" target="_blank">
 									<img class="lazy" data-original="{{mi.thumbnail}}" alt="{{mi.title}}|{{mi.tag}}" />
 								</div>
-							<h4><a target="_blank" href="/fhhash/{{mi['no']}}/{{mi.tag}}">{{mi['no']}}</a></h4>
+							<h4><a target="_blank" href="/fhhash/{{mi['id']}}/{{mi.tag}}">{{mi['no']}}</a></h4>
 							<p>{%if mi.created %}{{mi.created|date('%Y-%m-%d')}}{%endif%}|<strong>点赞：</strong>{{mi['hot'] or ''}}</p>
-							<p id="name_{{mi['id'] + 9878901231}}" no="{{mi['no']}}">{{mi.title|emphasis(keyword)|safe or '[暂无片名]'}}</p>
+							<p id="name_{{mi['id'] + 9878901231}}" no="{{mi['slug']}}">{{mi.title|emphasis(keyword)|safe or '[暂无片名]'}}</p>
               {% if mi.title%}
                 <button text="" onclick="javascript:fanyi('name_{{mi['id'] + 9878901231}}')">翻译中文</button>
               {%endif%}

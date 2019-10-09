@@ -47,7 +47,7 @@ class Config:
     CACHE_DEFAULT_TIMEOUT = 300
 
     # Used only for RedisCache, MemcachedCache and GAEMemcachedCache
-    CACHE_KEY_PREFIX = '%s_' % md5(SECRET_KEY).hexdigest()[7:15]
+    #CACHE_KEY_PREFIX = '%s_' % md5(SECRET_KEY).hexdigest()[7:15]
 
     # QiNiu Cloud Storage
     QINIU_AK = os.getenv('QINIU_AK') or ''

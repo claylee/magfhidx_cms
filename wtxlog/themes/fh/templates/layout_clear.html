@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ce01603140baf92ac3d4cade1dfc8d1d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    window['skel-prefix'] = "{{ theme_static('monochromed/css/style') }}";
+    console.log(window['skel-prefix']);
+    </script>
+    <title>{% block title %}{% endblock %}-番号本|Tor01</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="msvalidate.01" content="1444735370C480EBF6FEFDA8CED47572" />
+    <meta name="360-site-verification" content="bfd327653260a95669e9d30ea83a1bff" />
+    <meta name="sogou_site_verification" content="YgUXY11FVY"/>
+    <meta name="google-site-verification" content="U3HafQfopm5W4RVxSv-l-griiqZ36FzgoGVty-xgLdQ" />
+
+    <!-- Custom Theme files -->
+    <meta name="description" property="og:description" content="{% block metadesc %}{% endblock %}">
+    <meta name="keywords" content="{% block metakeywords %}{% endblock %}">
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- start menu -->
+    <meta name="referrer" content="{% block metareferrer %}{% endblock %}" />
+
+    <!--link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="{{ theme_static('monochromed/css/google.font.family.css') }}" />
+    <!-- Custom Theme files -->
+    <!-- Monochromed -->
+    <!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+    <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script-->
+    <script type='text/javascript' src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script type='text/javascript' src="{{ theme_static('jquery.lazyload.min.js') }}"></script>
+    <script src="{{ theme_static('monochromed/js/skel.min.js') }}"></script>
+    <script src="{{ theme_static('monochromed/js/skel-panels.min.js') }}"></script>
+    <script src="{{ theme_static('monochromed/js/init.js') }}"></script>
+    <noscript>
+      <link rel="stylesheet" href="{{ theme_static('monochromed/css/skel-noscript.css') }}" media="all" />
+      <link rel="stylesheet" href="{{ theme_static('monochromed/css/style.css') }}" media="all"/>
+    </noscript>
+
+    <!--link href="https://v4.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet"-->
+
+</head>
+
+{# 面包屑导航开始 #}
+{# notself为真则不加链接，用于栏目页 #}
+{% macro nav_by_category(category, notself=False) -%}
+{% for cate in category.parents -%}
+{% if notself and cate == category %}{{ cate.name }}{% else %}<a href="{{ cate.link }}">{{ cate.name }}</a>{% endif %}{% if not loop.last %}<b>&#187;</b>{% endif %}
+{% endfor -%}
+{%- endmacro %}
+{# 面包屑导航结束 #}
+
+{# LOGO部分代码开始 #}
+{% macro logo() -%}
+<a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a>
+{% endmacro %}
+{# LOGO部分代码结束 #}
+
+{# 定义导航菜单 #}
+{% set navigation_bar = [
+    (url_for('main.index'), 'index', 'Home'),
+    (url_for('main.topics'), 'topics', 'Topics'),
+    (url_for('main.tags'), 'tags', 'Tags'),
+    (url_for('main.flatpage', slug='about'), 'about', 'About'),
+] -%}
+{% set active_page = active_page|default('index') -%}
+<body class="homepage">
+    <!-- header -->
+    {% block header %}{% endblock%}
+    <!-- content -->
+  		<div id="main">
+  			<div class="container">
+
+        {% block crumbwrap %}<div class="crumb"><a href="{{ url_for('main.index') }}">Home</a><b>&#187;</b>{% block crumb %}{% endblock %}</div>{% endblock %}
+
+        {% block body %}
+        {%endblock%}
+        </div>
+      </div>
+    <!-- footer_top -->
+    <div id="footer">
+    {% block footertop %}
+    {% endblock%}
+    </div>
+</body>
+
+</html>

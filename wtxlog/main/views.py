@@ -18,7 +18,7 @@ from ..utils.upload import SaveUploadFile
 from ..utils.metaweblog import blog_dispatcher
 from ..ext import cache
 from ..models import db, Article, Category, Tag, Flatpage, Topic, \
-    Role, Permission
+    Role, Permission, Fanhao
 from . import main
 
 IMAGE_TYPES = {
@@ -181,6 +181,8 @@ def topics_():
 
 @main.route('/topics/')
 @main.route('/topics/page/<int:page>')
+@main.route('/casts/')
+@main.route('/casts/page/<int:page>')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
 def topics(template,page=1):
@@ -190,7 +192,7 @@ def topics(template,page=1):
     pagination = Page(_query, page=page, items_per_page=40, url=_url)
 
     topics = pagination.items
-    return render_template(_template,_topics = topics)
+    return render_template(_template,_topics = topics, pages = len(pagination), curpage = page)
 
 
 @main.route('/cast/<name>/')
@@ -469,3 +471,37 @@ def ckupload():
     response = make_response(res)
     response.headers["Content-Type"] = "text/html"
     return response
+
+
+@main.route("/fhs/",methods = ["Get","POST"])
+@main.route("/fhs/<page>",methods = ["Get","POST"])
+@main.route("/fhs_date",methods = ["Get","POST"])
+@main.route("/fhs_date/<year>",methods = ["Get","POST"])
+@main.route("/fhs_tag",methods = ["Get","POST"])
+@main.route("/fhs_tag/<tag>",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def fhs(template, page=1,year="",tag="",pagesize=20):
+    _template = template % 'article_lists.html'
+    perfile = 400
+    page = int(page)
+
+    fh_arr = []
+    total = 0
+
+
+    fh_query = None
+    if year:
+        #fh_arr, total = fh.load_fanhao_year(year,page,pagesize)
+        fh_query = Article.query.filter(Article.issuedate.like('%'+year+'%'))
+    elif tag:
+        #fh_arr, total = fh.load_fanhao_tag(tag,page,pagesize)
+        fh_query = Article.query.filter(Article._tags.like('%'+tag+'%'))
+    else:
+        #fh_arr, total = fh.load_fanhao_page(page,pagesize)
+        fh_query = Article.query
+
+    fh_pages = fh_query.order_by(Article.id.desc()).paginate(page,per_page=pagesize,error_out=False)
+    fh_arr = fh_pages.items
+    total = fh_pages.total
+
+    return render_template(_template,pages= fh_pages.pages ,curpage = page, articles = fh_arr)

@@ -701,6 +701,7 @@ class Article(db.Model):
     def __unicode__(self):
         return self.title
 
+    @property
     def fanhao(self):
         return Fanhao.query.filter(Fanhao.no == self.slug).first_or_404()
 
