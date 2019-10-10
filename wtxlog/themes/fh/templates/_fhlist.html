@@ -14,13 +14,13 @@
 					<div class="3u">
 						<section>
 								<div class="image full">
-									<a href="/fhhash/{{mi['id']}}/{{mi.tag}}" target="_blank">
-									<img class="lazy" data-original="{{mi.thumbnail}}" alt="{{mi.title}}|{{mi.tag}}" />
+									<a href="/fhhash/{{mi['slug'] or mi.no}}/{{mi.tag}}" target="_blank">
+									<img class="lazy" data-original="{{mi.thumbnail or mi.imgpost}}" alt="{{mi.title or mi.name}}|{{mi.tag}}" />
 								</div>
-							<h4><a target="_blank" href="/fhhash/{{mi['id']}}/{{mi.tag}}">{{mi['no']}}</a></h4>
+							<h4><a target="_blank" href="/fhhash/{{mi['slug'] or mi.no}}/{{mi.tag}}">{{mi['no']}}</a></h4>
 							<p>{%if mi.created %}{{mi.created|date('%Y-%m-%d')}}{%endif%}|<strong>点赞：</strong>{{mi['hot'] or ''}}</p>
-							<p id="name_{{mi['id'] + 9878901231}}" no="{{mi['slug']}}">{{mi.title|emphasis(keyword)|safe or '[暂无片名]'}}</p>
-              {% if mi.title%}
+							<p id="name_{{mi['id'] + 9878901231}}" no="{{mi['slug'] or mi.no}}">{{(mi.title or mi.name)|emphasis(keyword)|safe or '[暂无片名]'}}</p>
+              {% if (mi.title or mi.name)%}
                 <button text="" onclick="javascript:fanyi('name_{{mi['id'] + 9878901231}}')">翻译中文</button>
               {%endif%}
 						</section>

@@ -63,12 +63,13 @@ def index(template, page=1):
         return render_template(_template)
 
 
-@main.route('/fhhash/<int:article_id>/')
+#@main.route('/fhhash/<int:article_id>/')
+@main.route('/fhhash/<num>/')
 @main.route('/article/<int:article_id>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
-def article(template, article_id):
-    article = Article.query.get_or_404(article_id)
+def article(template, num):
+    article = Article.query.filter_by(slug=num).first_or_404()#get_or_404(article_id)
 
     if not article.published:
         abort(403)
@@ -618,3 +619,91 @@ def pus_order_num(template):
             pubgroup[group_keys[3]].append(c)
 
     return render_template(_template, pubgroup = pubgroup)
+
+@main.route("/publisher/<pub>",methods = ["Get","POST"])
+@main.route("/publisher/<pub>/<page>",methods = ["Get","POST"])
+@main.route("/publisher_date/<pub>/<year>",methods = ["Get","POST"])
+@main.route("/publisher_date/<pub>/<year>/<page>",methods = ["Get","POST"])
+@main.route("/publisher_tag/<pub>/<tag>/",methods = ["Get","POST"])
+@main.route("/publisher_tag/<pub>/<tag>/<page>",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def publisher(template, pub, year = "", page = 1 , tag = "", pagesize = 20, sensfilter = True):
+    #file = codecs.open("data/publisher.json",'r',encoding='utf-8')
+    pub = pub.replace("[_]","/")
+    _template = template % 'category.html'
+    page = int(page)
+    year = str(year)
+    fhlist = []
+    fh_query = Fanhao.query.filter(Fanhao.publisher == pub)
+
+    fh_tags = {}
+    for fh in fh_query.all():
+        if len(fh.tags) == 0:
+            continue
+        for t in fh.tags:
+            if not t:
+                continue
+            if not t in fh_tags:
+                fh_tags[t] = 1
+            else:
+                fh_tags[t] += 1
+    fh_tags,tag_order = tag_nomalize(fh_tags)
+
+    if year:
+        fh_query = fh_query.filter(Fanhao.issuedate.like('%'+ year +'%'))
+    if tag:
+        fh_query = fh_query.filter(Fanhao._tags.like('%'+ tag +'%'))
+
+
+    fhlist = fh_query.paginate(page, per_page = pagesize)
+    #print(fh_tags)
+
+    return render_template(_template, total = fhlist.total, articles = fhlist.items,
+     year=year, tag=tag, publisher=pub, pages = fhlist.pages, curpage = page, tags = fh_tags,tag_order=tag_order)
+
+
+
+def tag_nomalize(tags):
+    min_ft = 12
+    max_ft = 36
+    max = 0
+    min = 999999
+    size_level = 6
+    filter_word = [u'',u'\u5355\u4f53',u'\u5355\u4f53\u4f5c\u54c1']
+
+    for tag in tags:
+        if tag is None or tag in filter_word:
+            continue
+        if max < tags[tag]:
+            max = tags[tag]
+        if min > tags[tag]:
+            min = tags[tag]
+
+    rate_ft = (max_ft - min_ft + 0.01) / size_level
+    rate = (max - min + 0.01) / size_level
+
+    tag_order = []
+
+    for tag in tags:
+        if len(tag_order) == 0:
+            tag_order.append([tag,tags[tag]])
+            continue
+        #print("|tags[tag]:",tags[tag])
+        for i in range(0,len(tag_order)):
+            v = tag_order[i][1]
+            #print(i , v)
+            if tags[tag] > v:
+                tag_order.insert(i,[tag,tags[tag]])
+                break
+            if i == len(tag_order) - 1:
+                #print("last",tag_order[i])
+                tag_order.append([tag,tags[tag]])
+            #print(tag_order)
+
+    for tag in tags:
+        if tags[tag] > max or tag is None or tag in filter_word:
+            tags[tag] = [tags[tag], min_ft]
+        else:
+            tags[tag] = [tags[tag], float(tags[tag] - min) * rate_ft / rate + min_ft]
+
+    return tags,tag_order

@@ -45,32 +45,39 @@
 
     </section>
 
-    <section>
-      <header>
-          <h2>为您推荐番号<span></span> </h2>
-      </header>
-      {% include theme('recomm/fhs/fh_'~range(1, 4) | random~'.html') %}
-    </section>
+    {% include theme('recomm/fhs/fh_'~range(1, 4) | random~'.html') %}
 
   </div>
   <div id="sidebar" class="3u">
-    <section>
-        <div class="header_bg">
-        </div>
-        <div class="divider"></div>
-        <header>
-          <h4>随机推荐</h4>
-        </header>
-        <div class="default">
-          <section>
-          <ul class="style1">
-          </ul>
-        </section>
-        </div>
-    </section>
-    <div class="divider"></div>
+      <section class="sky-form">
+          <div class="header_bg">
+            {% include theme('_search_side.html')%}
+          </div>
+          <header>
+            <h2>发行时间</h2>
+          </header>
+          <div class="row1 scroll-pane">
+              <div class="col col-4">
+                  <a href="/publisher/{{publisher|urlencode|replace('/','[_]')|e|safe}}"><button>全部</button></a>
+              </div>
+              <div class="col col-4">
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2018"><button>2018</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2017"><button>2017</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2016"><button>2016</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2015"><button>2015</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2014"><button>2014</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2013"><button>2013</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2012"><button>2012</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2011"><button>2011</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2010"><button>2010</button></a>
+                  <a href="/publisher_date/{{publisher|urlencode|replace('/','[_]')|e|safe}}/2009"><button>2009</button></a>
+              </div>
+          </div>
+      </section>
+      <div class="w_sidebar">
+        {% include theme('recomm/pubs/hotpubs.html')%}
+      </div>
   </div>
-</div>
   <script>
 
   	</script>
