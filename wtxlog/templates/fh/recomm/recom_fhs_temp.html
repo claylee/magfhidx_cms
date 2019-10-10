@@ -1,0 +1,29 @@
+<section>
+<header>
+  <h2>为您推荐番号</h2>
+</header>
+{% for ar in fanhaolist%}
+{%set mi = ar.fanhao%}
+  {% if (loop.index - 1) % 4 == 0%}
+    <div class="row">
+  {%endif%}
+      <div class="3u">
+        <section>
+            <div class="image full">
+              <a href="/fhhash/{{mi['no']}}/{{mi['cast'][0]}}" target="_blank">
+              <img class="lazy" data-original="{{mi.img}}" alt="{{mi['no']}}|{{mi['cast'][0]}}" />
+            </div>
+          <h4><a target="_blank" href="/fhhash/{{mi['no']}}/{{mi['cast'][0]}}">{{mi['no']}}</a></h4>
+          <p>{{mi['issuedate']}}|<strong>点赞：</strong>{{mi['hot'] or ''}}</p>
+          <p id="name_{{mi['id'] + 9878901231}}" no="{{mi['no']}}">{{mi['name'] or '[暂无片名]'}}</p>
+          {% if mi['name']%}
+            <button text="" onclick="javascript:fanyi('name_{{mi['id'] + 9878901231}}')">翻译中文</button>
+          {%endif%}
+        </section>
+      </div>
+    {% if (loop.index) % 4 == 0 or loop.last %}
+    </div>
+    {%endif%}
+  <!-- Product -->
+{% endfor %}
+</section>

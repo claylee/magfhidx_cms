@@ -1,7 +1,12 @@
+
+{% if category %}<h1 class="">Category Archives: {{ category.name }}</h1>{% endif %}
+{% if tag %}<h1 class="">Tag Archives: {{ tag.name }}</h1>{% endif %}
+{% if topic %}<h1 class="">Topic Archives: {{ topic.name }}</h1>{% endif %}
+{% if year or month %}<h1 class="">Monthly Archives: {{ year }}-{{ month }}</h1>{% endif %}
 {% if not keyword %}{% set keyword=None %}{% endif %}
+
 {% if articles %}
   <input type="hidden" class="indextype" value="{{ indextype }}"/>
-		{% if not keyword %}{% set keyword=None %}{% endif %}
     {% for mi in articles%}
 			{% if (loop.index - 1) % 4 == 0%}
 				<div class="row">
@@ -29,6 +34,8 @@
 		<ul class="pagination pagination-md pagination-flush">
 		</ul>
 	</nav>
+{% else %}
+  <p>没有内容</p>
 {% endif %}
   <script>
   	$(function(){

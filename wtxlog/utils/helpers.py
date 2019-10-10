@@ -19,7 +19,6 @@ def get_current_theme():
 def render_template(template, **context):
     print("render_template")
     print(template)
-    print(context)
     return render_theme_template(get_current_theme(), template, **context)
 
 

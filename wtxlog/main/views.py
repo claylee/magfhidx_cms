@@ -11,6 +11,8 @@ from werkzeug.contrib.atom import AtomFeed
 from werkzeug._compat import to_bytes
 from webhelpers.paginate import Page, PageURL
 from flask.ext.mobility.decorators import mobile_template
+from sqlalchemy import or_, and_
+from sqlalchemy.sql import func
 
 from ..decorators import permission_required
 from ..utils.helpers import render_template, get_category_ids, page_url
@@ -18,7 +20,7 @@ from ..utils.upload import SaveUploadFile
 from ..utils.metaweblog import blog_dispatcher
 from ..ext import cache
 from ..models import db, Article, Category, Tag, Flatpage, Topic, \
-    Role, Permission, Fanhao
+    Role, Permission, Fanhao, Publisher_tag
 from . import main
 
 IMAGE_TYPES = {
@@ -505,3 +507,114 @@ def fhs(template, page=1,year="",tag="",pagesize=20):
     total = fh_pages.total
 
     return render_template(_template,pages= fh_pages.pages ,curpage = page, articles = fh_arr)
+
+
+@main.route("/publishers/",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def publishers(template):
+    _template = template % 'categories.html'
+    fh = Fanhao()
+    publist = []
+
+    results = db.session.query( Fanhao.publisher, func.count('*').label('cnt') ).filter(
+        Fanhao.publisher != ''
+    ).group_by( Fanhao.publisher)
+
+    for c in results:
+        if not c:
+            continue
+        publist.append({'pub':c.publisher,'count':c.cnt})
+    return render_template(_template, publist = publist)
+
+@main.route("/publishers/ordertag",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def pus_order_tag(template):
+    _template = template % 'categories_tag.html'
+    fh = Fanhao()
+    publist = {}
+    pubgroup = {}
+    limit = 5
+
+    results = db.session.query( Fanhao.publisher, func.count('*').label('cnt') ).filter(
+        Fanhao.publisher != ''
+    ).group_by( Fanhao.publisher )
+
+    tags = Publisher_tag()
+
+    tag_query = Publisher_tag.query.all()
+
+    for c in results:
+        if not c:
+            continue
+        if not c.publisher:
+            publist['None'] = c.cnt
+        else:
+            publist[c.publisher] = c.cnt
+
+    pre_key = ''
+    i = 0
+    tot = 0
+    for t in tag_query:
+        group_key = t.tag
+        pub_name = t.publisher
+
+        if not group_key:
+            group_key = 'None'
+
+        tot+=1
+        if pub_name != pre_key:
+            pre_key = pub_name
+            i = 0
+
+        i +=1
+        if i > limit:
+            continue
+        if not pub_name in publist:
+            #print(pub_name)
+            continue
+
+        if group_key not in pubgroup:
+            pubgroup[group_key] = []
+
+        if not pub_name:
+            pub_name = 'None'
+        pubgroup[group_key].append([pub_name,publist[pub_name]])
+
+    return render_template(_template, pubgroup = pubgroup)
+
+
+@main.route("/publishers/ordernum",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def pus_order_num(template):
+    _template = template % 'categories_num.html'
+    fh = Fanhao()
+    publist = {}
+    pubgroup = {}
+    limit = 5
+
+    results = db.session.query( Fanhao.publisher, func.count('*').label('cnt') ).filter(
+        Fanhao.publisher != ''
+    ).group_by( Fanhao.publisher )
+
+    group_keys = ['收录量大于100+'.decode('utf-8'),'收录量50~100'.decode('utf-8')
+        ,'收录量10~50'.decode('utf-8'),'收录量小于10-'.decode('utf-8')]
+    pubgroup = {group_keys[0]:[],group_keys[1]:[],group_keys[2]:[],group_keys[3]:[]}
+
+    for c in results:
+        if not c:
+            continue
+        if not c.publisher:
+            publist['None'] = c.cnt
+        else:
+            publist[c.publisher] = c.cnt
+
+        if c.cnt > 100:
+            pubgroup[group_keys[0]].append(c)
+        elif c.cnt > 50:
+            pubgroup[group_keys[1]].append(c)
+        elif c.cnt > 10:
+            pubgroup[group_keys[2]].append(c)
+        elif c.cnt > 0:
+            pubgroup[group_keys[3]].append(c)
+
+    return render_template(_template, pubgroup = pubgroup)
