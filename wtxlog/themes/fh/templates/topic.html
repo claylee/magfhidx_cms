@@ -48,16 +48,14 @@
             <header>
               <h2>{{topic.name + '参演番号'}}</h2>
             </header>
+            {% for a in articles%}
+              {{a.name}}
+            {% endfor %}
+            {%set fanhaolist = articles %}
             {% include theme('_fhlist.html')%}
         </section>
         <div class="divider"></div>
-        <section>
-            <header>
-              <h2>为您推荐番号</h2>
-            </header>
-            {%set fanhaolist = recomm_fhs %}
-            {% include theme('_fhlist.html')%}
-        </section>
+        {% include theme('recomm/fhs/fh_'~range(1, 4) | random~'.html') %}
     </div>
     <!-- Sidebar -->
     <div id="sidebar" class="3u">
@@ -74,6 +72,9 @@
                     <li><a href="/publishers">番号系列</a></li>
                 </ul>
             </div>
+        </div>
+        <div class="w_sidebar">
+            {% include theme('recomm/cast/cast_'~[1,4]|random~'.html')%}
         </div>
     </div>
 

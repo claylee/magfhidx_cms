@@ -13,41 +13,117 @@
 
 {% block body %}
 <div class="row">
-<div id="content" class="post 9u skel-cell-important">
-  <header>
-    <h2 class="">女优排行</h2>
-  </header>
-  <div class="entry">
+  <div id="content" class="post 9u skel-cell-important">
+    <header>
+      <h2 class="">女优排行</h2>
+    </header>
+    <div class="entry">
 
-    {% with topics = _topics %}
-    {% for mi in topics -%}
-        {% if (loop.index - 1) % 4 == 0%}
-        <div class="row">
-        {%endif%}
-        <div class="3u">
-          <section>
-                <div class="image full">
-                    <a href="/cast/{{mi.name}}" class="vimage full" target="_blank">
-                        <img class="lazy" data-original="{{mi.thumbnail}}" alt="{{mi.name}}" />
-                    </a>
-                </div>
-                <h4><a target="_blank" href="/cast/{{mi.name}}">{{mi.name}}</a></h4>
-                <p><strong>点赞：</strong>{{mi.id}}</p>
-                <p>{{mi['tags']|join(' ')}}</p>
-          </section>
-        </div>
-        {% if (loop.index) % 4 == 0 or loop.last %}
-        </div>
-        {%endif%}
-        <!-- Product -->
-    {% endfor %}
-    <ul class="clearfix">
-    {% for topic in topics -%}
-    <li><a href="{{ topic.link }}">{{ topic.name }}</a></li>
-    {%- endfor %}
-    </ul>
-    {% endwith %}
+      {% with topics = _topics %}
+        {% for mi in topics -%}
+            {% if (loop.index - 1) % 4 == 0%}
+            <div class="row">
+            {%endif%}
+            <div class="3u">
+              <section>
+                    <div class="image full">
+                        <a href="/cast/{{mi.name}}" class="vimage full" target="_blank">
+                            <img class="lazy" data-original="{{mi.thumbnail}}" alt="{{mi.name}}" />
+                        </a>
+                    </div>
+                    <h4><a target="_blank" href="/cast/{{mi.name}}">{{mi.name}}</a></h4>
+                    <p><strong>点赞：</strong>{{mi.id}}</p>
+                    <p>{{mi['tags']|join(' ')}}</p>
+              </section>
+            </div>
+            {% if (loop.index) % 4 == 0 or loop.last %}
+            </div>
+            {%endif%}
+            <!-- Product -->
+        {% endfor %}
+      {% endwith %}
+      <nav aria-label="document list paging" id="docpagi" max-size="5">
+          <ul class="pagination pagination-md pagination-flush">
+          </ul>
+      </nav>
+    </div>
   </div>
-</div>
+  <div id="sidebar" class="3u">
+      <div class="w_sidebar">
+        {% include theme('_search_side.html')%}
+          <div class="w_nav1">
+              <h4>All</h4>
+              <ul>
+                  <li><a href="/fhs">番号大全</a></li>
+                  <li><a href="/casts">女优排行</a></li>
+                  <li><a href="/publishers">番号系列</a></li>
+              </ul>
+          </div>
+          <h3>过滤</h3>
+          <section class="sky-form">
+              <h4>出道时间</h4>
+              <div class="row1 scroll-pane">
+                  <div class="col col-4">
+                      <a href="/casts/"><button>全部</button></a>
+                  </div>
+                  <div class="col col-4">
+                      <a href="/casts_date/2018"><button>2018</button></a>
+                      <a href="/casts_date/2017"><button>2017</button></a>
+                      <a href="/casts_date/2016"><button>2016</button></a>
+                      <a href="/casts_date/2015"><button>2015</button></a>
+                      <a href="/casts_date/2014"><button>2014</button></a>
+                      <a href="/casts_date/2013"><button>2013</button></a>
+                      <a href="/casts_date/2012"><button>2012</button></a>
+                      <a href="/casts_date/2011"><button>2011</button></a>
+                      <a href="/casts_date/2010"><button>2010</button></a>
+                      <a href="/casts_date/2009"><button>2009</button></a>
+                  </div>
+              </div>
+          </section>
+          <section class="sky-form">
+              <h4>演员特点</h4>
+              <div class="row1 scroll-pane">
+                  <div class="col col-4">
+                      <a href="/casts/"><button>全部</button></a>
+                  </div>
+                  <div class="col col-4">
+                      <a href="/casts_tag/最美"><button>最美</button></a>
+                      <a href="/casts_tag/90后"><button>90后</button></a>
+                      <a href="/casts_tag/名模"><button>名模</button></a>
+                      <a href="/casts_tag/大胸"><button>大胸</button></a>
+                      <a href="/casts_tag/漂亮"><button>漂亮</button></a>
+                      <a href="/casts_tag/萝莉"><button>萝莉</button></a>
+                      <a href="/casts_tag/步兵"><button>步兵</button></a>
+                  </div>
+              </div>
+          </section>
+      </div>
+  </div>
+
+  <script>
+      $(function () {
+          var page = {{ curpage or 1 }};
+          var year = '{{ year }}';
+          var tag = '{{ tag }}';
+          pageurl = "";
+
+          if(year)
+          {
+              pageurl = "/casts_date/{{year}}/page/__id__";
+          }
+          else if(tag)
+          {
+              pageurl = "/casts_tag/{{tag}}/page/__id__";
+          }
+          else {
+              pageurl = "/casts/page/__id__";
+          }
+          $(".pagination").createPage({
+              totalPage: {{ pages or 1}},
+              currPage: page,
+              link_to: pageurl
+      		});
+      })
+  </script>
 </div>
 {% endblock %}

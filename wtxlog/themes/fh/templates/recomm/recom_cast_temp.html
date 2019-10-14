@@ -1,0 +1,21 @@
+{% for mi in casts%}
+    {% if (loop.index - 1) % 4 == 0%}
+    <div class="row">
+    {%endif%}
+    <div class="3u">
+      <section>
+            <div class="image full">
+                <a href="/cast/{{mi['name']}}" class="vimage full" target="_blank">
+                    <img class="lazy" data-original="{{mi.img}}" alt="{{mi['name']}}" />
+                </a>
+            </div>
+            <h4><a target="_blank" href="/cast/{{mi['name']}}">{{mi['name']}}</a></h4>
+            <p><strong>点赞：</strong>{{mi['hot']}}</p>
+            <p>{{mi['tags']|join(' ')}}</p>
+      </section>
+    </div>
+    {% if (loop.index) % 4 == 0 or loop.last %}
+    </div>
+    {%endif%}
+    <!-- Product -->
+{% endfor %}

@@ -1,7 +1,7 @@
 {% extends theme('layout.html')  %}
 
 {%block body%}
-{%set fh = article.fanhao()%}
+{%set fh = article.fanhao%}
 <div class="row">
     <div name='content' class="9u">
         <header>
@@ -99,19 +99,14 @@
           </div>
         </section>
         <div class="divider"></div>
-        <div class="divider"></div>
-        <section>
-            <header>
-              <h2>{{fh.publisher}}系列其他番号</h2>
-            </header>
-            <p><a class="button" href="/publisher/{{fh.publisher|replace('/','[_]')}}">{{fh.publisher}}系列 | 全部番号部</a></p>
-
-            {%include 'fh/_fhlist.html'%}
-            <div class="clearfix"></div>
-        </section>
+        {% include theme('recomm/fhs/fh_'~range(1, 4) | random~'.html') %}
     </div>
     <div id="sidebar" class="3u">
         <div class="header_bg">
+          {% include theme('_search_side.html')%}
+        </div>
+        <div class="w_sidebar">
+            {% include theme('recomm/cast/cast_'~[1,4]|random~'.html')%}
         </div>
 
     </div>
