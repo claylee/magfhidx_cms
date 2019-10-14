@@ -11,6 +11,8 @@ from werkzeug.contrib.atom import AtomFeed
 from werkzeug._compat import to_bytes
 from webhelpers.paginate import Page, PageURL
 from flask.ext.mobility.decorators import mobile_template
+from sqlalchemy import or_, and_
+from sqlalchemy.sql import func
 
 from ..decorators import permission_required
 from ..utils.helpers import render_template, get_category_ids, page_url
@@ -18,7 +20,7 @@ from ..utils.upload import SaveUploadFile
 from ..utils.metaweblog import blog_dispatcher
 from ..ext import cache
 from ..models import db, Article, Category, Tag, Flatpage, Topic, \
-    Role, Permission
+    Role, Permission, Fanhao, Publisher_tag
 from . import main
 
 import requests
@@ -63,12 +65,13 @@ def index(template, page=1):
         return render_template(_template)
 
 
-@main.route('/fhhash/<int:article_id>/')
+#@main.route('/fhhash/<int:article_id>/')
+@main.route('/fhhash/<num>/')
 @main.route('/article/<int:article_id>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
-def article(template, article_id):
-    article = Article.query.get_or_404(article_id)
+def article(template, num):
+    article = Article.query.filter_by(slug=num).first_or_404()#get_or_404(article_id)
 
     if not article.published:
         abort(403)
@@ -183,6 +186,8 @@ def topics_():
 
 @main.route('/topics/')
 @main.route('/topics/page/<int:page>')
+@main.route('/casts/')
+@main.route('/casts/page/<int:page>')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
 def topics(template,page=1):
@@ -192,7 +197,7 @@ def topics(template,page=1):
     pagination = Page(_query, page=page, items_per_page=40, url=_url)
 
     topics = pagination.items
-    return render_template(_template,_topics = topics)
+    return render_template(_template,_topics = topics, pages = len(pagination), curpage = page)
 
 
 @main.route('/cast/<name>/')
@@ -481,3 +486,236 @@ def pulldata(template,no):
     r = requests.get(api_url)
     print(r.json())
     return render_template(template, data=r.json())
+
+@main.route("/fhs/",methods = ["Get","POST"])
+@main.route("/fhs/<page>",methods = ["Get","POST"])
+@main.route("/fhs_date",methods = ["Get","POST"])
+@main.route("/fhs_date/<year>",methods = ["Get","POST"])
+@main.route("/fhs_tag",methods = ["Get","POST"])
+@main.route("/fhs_tag/<tag>",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def fhs(template, page=1,year="",tag="",pagesize=20):
+    _template = template % 'article_lists.html'
+    perfile = 400
+    page = int(page)
+
+    fh_arr = []
+    total = 0
+
+
+    fh_query = None
+    if year:
+        #fh_arr, total = fh.load_fanhao_year(year,page,pagesize)
+        fh_query = Article.query.filter(Article.issuedate.like('%'+year+'%'))
+    elif tag:
+        #fh_arr, total = fh.load_fanhao_tag(tag,page,pagesize)
+        fh_query = Article.query.filter(Article._tags.like('%'+tag+'%'))
+    else:
+        #fh_arr, total = fh.load_fanhao_page(page,pagesize)
+        fh_query = Article.query
+
+    fh_pages = fh_query.order_by(Article.id.desc()).paginate(page,per_page=pagesize,error_out=False)
+    fh_arr = fh_pages.items
+    total = fh_pages.total
+
+    return render_template(_template,pages= fh_pages.pages ,curpage = page, articles = fh_arr)
+
+
+@main.route("/publishers/",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def publishers(template):
+    _template = template % 'categories.html'
+    fh = Fanhao()
+    publist = []
+
+    results = db.session.query( Fanhao.publisher, func.count('*').label('cnt') ).filter(
+        Fanhao.publisher != ''
+    ).group_by( Fanhao.publisher)
+
+    for c in results:
+        if not c:
+            continue
+        publist.append({'pub':c.publisher,'count':c.cnt})
+    return render_template(_template, publist = publist)
+
+@main.route("/publishers/ordertag",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def pus_order_tag(template):
+    _template = template % 'categories_tag.html'
+    fh = Fanhao()
+    publist = {}
+    pubgroup = {}
+    limit = 5
+
+    results = db.session.query( Fanhao.publisher, func.count('*').label('cnt') ).filter(
+        Fanhao.publisher != ''
+    ).group_by( Fanhao.publisher )
+
+    tags = Publisher_tag()
+
+    tag_query = Publisher_tag.query.all()
+
+    for c in results:
+        if not c:
+            continue
+        if not c.publisher:
+            publist['None'] = c.cnt
+        else:
+            publist[c.publisher] = c.cnt
+
+    pre_key = ''
+    i = 0
+    tot = 0
+    for t in tag_query:
+        group_key = t.tag
+        pub_name = t.publisher
+
+        if not group_key:
+            group_key = 'None'
+
+        tot+=1
+        if pub_name != pre_key:
+            pre_key = pub_name
+            i = 0
+
+        i +=1
+        if i > limit:
+            continue
+        if not pub_name in publist:
+            #print(pub_name)
+            continue
+
+        if group_key not in pubgroup:
+            pubgroup[group_key] = []
+
+        if not pub_name:
+            pub_name = 'None'
+        pubgroup[group_key].append([pub_name,publist[pub_name]])
+
+    return render_template(_template, pubgroup = pubgroup)
+
+
+@main.route("/publishers/ordernum",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def pus_order_num(template):
+    _template = template % 'categories_num.html'
+    fh = Fanhao()
+    publist = {}
+    pubgroup = {}
+    limit = 5
+
+    results = db.session.query( Fanhao.publisher, func.count('*').label('cnt') ).filter(
+        Fanhao.publisher != ''
+    ).group_by( Fanhao.publisher )
+
+    group_keys = ['收录量大于100+'.decode('utf-8'),'收录量50~100'.decode('utf-8')
+        ,'收录量10~50'.decode('utf-8'),'收录量小于10-'.decode('utf-8')]
+    pubgroup = {group_keys[0]:[],group_keys[1]:[],group_keys[2]:[],group_keys[3]:[]}
+
+    for c in results:
+        if not c:
+            continue
+        if not c.publisher:
+            publist['None'] = c.cnt
+        else:
+            publist[c.publisher] = c.cnt
+
+        if c.cnt > 100:
+            pubgroup[group_keys[0]].append(c)
+        elif c.cnt > 50:
+            pubgroup[group_keys[1]].append(c)
+        elif c.cnt > 10:
+            pubgroup[group_keys[2]].append(c)
+        elif c.cnt > 0:
+            pubgroup[group_keys[3]].append(c)
+
+    return render_template(_template, pubgroup = pubgroup)
+
+@main.route("/publisher/<pub>",methods = ["Get","POST"])
+@main.route("/publisher/<pub>/<page>",methods = ["Get","POST"])
+@main.route("/publisher_date/<pub>/<year>",methods = ["Get","POST"])
+@main.route("/publisher_date/<pub>/<year>/<page>",methods = ["Get","POST"])
+@main.route("/publisher_tag/<pub>/<tag>/",methods = ["Get","POST"])
+@main.route("/publisher_tag/<pub>/<tag>/<page>",methods = ["Get","POST"])
+@mobile_template('{mobile/}%s')
+def publisher(template, pub, year = "", page = 1 , tag = "", pagesize = 20, sensfilter = True):
+    #file = codecs.open("data/publisher.json",'r',encoding='utf-8')
+    pub = pub.replace("[_]","/")
+    _template = template % 'category.html'
+    page = int(page)
+    year = str(year)
+    fhlist = []
+    fh_query = Fanhao.query.filter(Fanhao.publisher == pub)
+
+    fh_tags = {}
+    for fh in fh_query.all():
+        if len(fh.tags) == 0:
+            continue
+        for t in fh.tags:
+            if not t:
+                continue
+            if not t in fh_tags:
+                fh_tags[t] = 1
+            else:
+                fh_tags[t] += 1
+    fh_tags,tag_order = tag_nomalize(fh_tags)
+
+    if year:
+        fh_query = fh_query.filter(Fanhao.issuedate.like('%'+ year +'%'))
+    if tag:
+        fh_query = fh_query.filter(Fanhao._tags.like('%'+ tag +'%'))
+
+
+    fhlist = fh_query.paginate(page, per_page = pagesize)
+    #print(fh_tags)
+
+    return render_template(_template, total = fhlist.total, articles = fhlist.items,
+     year=year, tag=tag, publisher=pub, pages = fhlist.pages, curpage = page, tags = fh_tags,tag_order=tag_order)
+
+
+
+def tag_nomalize(tags):
+    min_ft = 12
+    max_ft = 36
+    max = 0
+    min = 999999
+    size_level = 6
+    filter_word = [u'',u'\u5355\u4f53',u'\u5355\u4f53\u4f5c\u54c1']
+
+    for tag in tags:
+        if tag is None or tag in filter_word:
+            continue
+        if max < tags[tag]:
+            max = tags[tag]
+        if min > tags[tag]:
+            min = tags[tag]
+
+    rate_ft = (max_ft - min_ft + 0.01) / size_level
+    rate = (max - min + 0.01) / size_level
+
+    tag_order = []
+
+    for tag in tags:
+        if len(tag_order) == 0:
+            tag_order.append([tag,tags[tag]])
+            continue
+        #print("|tags[tag]:",tags[tag])
+        for i in range(0,len(tag_order)):
+            v = tag_order[i][1]
+            #print(i , v)
+            if tags[tag] > v:
+                tag_order.insert(i,[tag,tags[tag]])
+                break
+            if i == len(tag_order) - 1:
+                #print("last",tag_order[i])
+                tag_order.append([tag,tags[tag]])
+            #print(tag_order)
+
+    for tag in tags:
+        if tags[tag] > max or tag is None or tag in filter_word:
+            tags[tag] = [tags[tag], min_ft]
+        else:
+            tags[tag] = [tags[tag], float(tags[tag] - min) * rate_ft / rate + min_ft]
+
+    return tags,tag_order
+>>>>>>> 7fe62b046dac9688927fac2d697a330b9f5ad301
