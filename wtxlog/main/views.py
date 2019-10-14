@@ -21,6 +21,8 @@ from ..models import db, Article, Category, Tag, Flatpage, Topic, \
     Role, Permission
 from . import main
 
+import requests
+
 IMAGE_TYPES = {
     'image/jpeg': '.jpg',
     'image/png': '.png',
@@ -469,3 +471,13 @@ def ckupload():
     response = make_response(res)
     response.headers["Content-Type"] = "text/html"
     return response
+
+
+@main.route('/pulldata/<no>', methods=['GET','POST'])
+@mobile_template('{mobile/}%s')
+def pulldata(template,no):
+    template = template % "admin/pull_data.html"
+    api_url = "http://localhost:5001/api/get_fanhao/SDNM-116"
+    r = requests.get(api_url)
+    print(r.json())
+    return render_template(template, data=r.json())
