@@ -2,7 +2,7 @@
 
 import xmlrpclib
 from flask import current_app, request, url_for
-from flask.ext.themes import render_theme_template, get_theme
+from flask_themes import render_theme_template, get_theme
 from ..models import Category
 
 

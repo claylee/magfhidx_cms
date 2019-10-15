@@ -10,7 +10,7 @@ from flask import request, url_for, redirect, current_app, make_response, abort
 from werkzeug.contrib.atom import AtomFeed
 from werkzeug._compat import to_bytes
 from webhelpers.paginate import Page, PageURL
-from flask.ext.mobility.decorators import mobile_template
+from flask_mobility.decorators import mobile_template
 from sqlalchemy import or_, and_
 from sqlalchemy.sql import func
 
@@ -66,12 +66,12 @@ def index(template, page=1):
 
 
 #@main.route('/fhhash/<int:article_id>/')
-@main.route('/fhhash/<num>/')
+#@main.route('/fhhash/<num>/')
 @main.route('/article/<int:article_id>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
-def article(template, num):
-    article = Article.query.filter_by(slug=num).first_or_404()#get_or_404(article_id)
+def article(template, article_id):
+    article = Article.query.get_or_404(article_id)
 
     if not article.published:
         abort(403)
@@ -478,15 +478,6 @@ def ckupload():
     return response
 
 
-@main.route('/pulldata/<no>', methods=['GET','POST'])
-@mobile_template('{mobile/}%s')
-def pulldata(template,no):
-    template = template % "admin/pull_data.html"
-    api_url = "http://localhost:5001/api/get_fanhao/SDNM-116"
-    r = requests.get(api_url)
-    print(r.json())
-    return render_template(template, data=r.json())
-
 @main.route("/fhs/",methods = ["Get","POST"])
 @main.route("/fhs/<page>",methods = ["Get","POST"])
 @main.route("/fhs_date",methods = ["Get","POST"])
@@ -718,4 +709,36 @@ def tag_nomalize(tags):
             tags[tag] = [tags[tag], float(tags[tag] - min) * rate_ft / rate + min_ft]
 
     return tags,tag_order
->>>>>>> 7fe62b046dac9688927fac2d697a330b9f5ad301
+
+
+@main.route('/pulldata/<no>', methods=['GET','POST'])
+@mobile_template('{mobile/}%s')
+def pulldata(template,no):
+    template = template % "admin/pull_data.html"
+    api_url = "http://localhost:5001/api/get_fanhao/SDNM-116"
+    r = requests.get(api_url)
+    print(r.json())
+    return render_template(template, data=r.json())
+
+
+@main.route('/pullfh/', methods=['GET','POST'])
+@mobile_template('{mobile/}%s')
+def pullfh(template):
+    template = template % "api/fhs.html"
+
+    #page_url = url_for("main.pullfh", page=page)
+    #pagination=Page(None,page=1,items_per_page=20,url=page_url)
+    #pagination.page_count = 10
+    return render_template(template)
+
+from ..utils.fanhao import *
+@main.route('/edit_fh/<no>', methods=['GET','POST'])
+@mobile_template('{mobile/}%s')
+def edit_fh(template,no):
+    template = template % "api/fh_article.html"
+
+    api_url = "http://localhost:5001/api/get_fanhao/"+no
+    r = requests.get(api_url)
+
+    fanhao(r.json())
+    return "ok"

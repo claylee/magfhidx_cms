@@ -5,7 +5,7 @@
 <div class="row-fluid">
 
     <div>
-        {% if current_user.is_authenticated() %}
+        {% if current_user.is_authenticated %}
         <p class="lead">
         {{ _('Howdy') }}, {{ current_user.username }}
         </p>

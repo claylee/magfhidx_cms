@@ -1,0 +1,95 @@
+{% extends theme('layout.html') %}
+
+{%block body%}
+<div class="row">
+    <input type="hidden" class="indextype" value="{{ indextype }}" />
+
+    <div id="content" class="9u skel-cell-important">
+        <div class="row">
+            <div class="4u">
+                <img class="image full" src="{{topic.thumbnail}}" alt="{{topic.name}}"/>
+            </div>
+            <div class="8u">
+                <header>
+                  <h2>{{topic.ext_cast.name}}</h2>
+                </header>
+                <div class="">
+                    <p><strong>别名：</strong>{{topic.ext_cast.alias}}</p>
+                </div>
+                <div class="">
+                    <p><strong>三围：</strong>{{topic.ext_cast.body}}</p>
+                </div>
+                <div class="">
+                    <p><span class="card-text"><strong>出生日期：</strong>{{topic.ext_cast.birthdate}}</span><br /></p>
+                </div>
+                <div class="">
+                    <p><span class="card-text"><strong>出道时间：</strong>{{topic.ext_cast.castdate}}</span><br /></p>
+                </div>
+                <div class="">
+                    <p><strong>点赞：</strong>{{topic.ext_cast.hot}}</p>
+                </div>
+
+                <span class="card-text">
+                    {% for c in topic.ext_cast.tags %}
+                      <a href="/casts_tag/{{c}}"><span class="badge badge-primary">{{c}}</span></a>
+                    {%endfor%}
+                </span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <section>
+            <header>
+              <h2>演员介绍</h2>
+            </header>
+            <p><span class="byline">{{topic.ext_cast.desc}}</span></p>
+        </section>
+        <div class="divider"></div>
+        <section>
+            <header>
+              <h2>{{topic.name + '参演番号'}}</h2>
+            </header>
+            {% for a in articles%}
+              {{a.name}}
+            {% endfor %}
+            {%set fanhaolist = articles %}
+            {% include theme('_fhlist.html')%}
+        </section>
+        <div class="divider"></div>
+        {% include theme('recomm/fhs/fh_'~range(1, 4) | random~'.html') %}
+    </div>
+    <!-- Sidebar -->
+    <div id="sidebar" class="3u">
+        <div class="header_bg">
+        </div>
+        <div class="w_sidebar">
+            <div class="w_nav1">
+                <header>
+                  <h2>栏目</h2>
+                </header>
+                <ul>
+                    <li><a href="/fhs">番号大全</a></li>
+                    <li><a href="/casts">女优大全</a></li>
+                    <li><a href="/publishers">番号系列</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="w_sidebar">
+            {% include theme('recomm/cast/cast_'~[1,4]|random~'.html')%}
+        </div>
+    </div>
+
+
+    <script>
+        $(function () {
+            var page = {{ curpage }};
+            if (!page)
+                page = 1;
+            $(".pagination").createPage({
+                totalPage: {{ pages }},
+                currPage: page,
+                link_to:"/cast/{{topic.name}}/__id__"
+            });
+        })
+    </script>
+</div>
+{%endblock%}

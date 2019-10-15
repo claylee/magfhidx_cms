@@ -1,0 +1,99 @@
+{% extends theme('layout.html') %}
+{%block main%}
+<style type="text/css">
+  #fhs>thead .1th
+  {
+    width:128px;
+    margin:4px;
+  }
+  #fhs
+  {border: 1px solid #ccc;border-collapse: collapse; width:80%;}
+  #fhs th,#fhs td
+  {border: 1px solid #ccc;padding: 10px; vertical-align: top}
+  .pagenavi a
+  {
+    display:inline-block;
+    margin:8px;
+  }
+</style>
+<div>
+  <table id="fhs" style="border:1px solid #336699">
+      <thead>
+          <tr>
+            <th style="width:100px">id</th>
+            <th style="width:100px">no</th>
+            <th style="width:280px">name</th>
+            <th style="width:100px">cast</th>
+            <th style="width:100px">Image</th>
+            <th style="width:400px">desc</th>
+            <th style="width:100px">publisher</th>
+            <th style="width:70px">act</th>
+          </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+</div>
+<div class="pagenavi">
+</div>
+11111
+<script type="text/javascript">
+(function(){
+
+  var pull_fh = function(){
+    var no = $(this).attr("no");
+    $.ajax({
+      url:'/edit_fh/'+no,
+      success:function(msg){
+        console.log(msg);
+      },
+      error:function(xhr,status,error){
+        console.log(error);
+      }
+    });
+  }
+
+  var load_fhs = function()
+  {
+    var page = $(this).attr("page");
+    $.ajax({
+      url:'http://localhost:5001/api/get_fanhao_list/'+page+'/20',
+      dataType:"json",
+      success:function(msg){
+        $("#fhs>tbody").empty();
+    }}).done(function(e){
+      for(var i in e)
+      {
+        fh = e[i];
+        $tr = $("<tr>");
+        $("#fhs>tbody").append($tr);
+        var cast_name = fh['cast'] ? fh['cast'].join(',') : fh['cast'].length;
+        $tr.append($("<td>" + fh['id'] + "</td>"));
+        $tr.append($("<td>" + fh['no'] + "</td>"));
+        $tr.append($("<td>" + fh['name'] + "</td>"));
+        $tr.append($("<td>" + cast_name + "</td>"));
+        $tr.append($("<td><img src='" + fh['imgpost'] + "' width='100'/></td>"));
+        $tr.append($("<td>" + fh['desc'] + "</td>"));
+        $tr.append($("<td>" + fh['publisher'] + "</td>"));
+        var row_edit = $("<a href='javascript:void(0)' no='"+ fh['no'] +"'>编辑</a>");
+        row_edit.click(pull_fh);
+        var td = $("<td></td>");
+        td.append(row_edit);
+        $tr.append(td);
+      }
+    });
+  }
+
+  for(var i=1; i< 12; i++)
+  {
+    var page_idx = $("<a href='javascript:void(0)' page='"+i+"'>第"+ i +"页</a>");
+    page_idx.click(load_fhs);
+    $('.pagenavi').append(page_idx);
+  }
+
+
+})()
+</script>
+
+{%endblock%}

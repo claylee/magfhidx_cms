@@ -9,10 +9,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from jinja2.filters import do_striptags, do_truncate
 
-from flask.ext.sqlalchemy import BaseQuery
+from flask_sqlalchemy import BaseQuery
 
 from flask import current_app, request, url_for
-from flask.ext.login import UserMixin, AnonymousUserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Numeric
 
@@ -701,7 +701,7 @@ class Article(db.Model):
     def __unicode__(self):
         return self.title
 
-    @property
+    #@property
     def fanhao(self):
         return Fanhao.query.filter(Fanhao.no == self.slug).first_or_404()
 
@@ -711,6 +711,7 @@ class Article(db.Model):
         return pattern_hasmore.search(self.body) is not None or \
             self.summary.find('...') >= 0
 
+
     @cached_property
     def link(self):
         return url_for('main.article', article_id=self.id, _external=True)
@@ -718,6 +719,7 @@ class Article(db.Model):
     @cached_property
     def shortlink(self):
         return url_for('main.article', article_id=self.id)
+    
 
     @cached_property
     def get_next(self):

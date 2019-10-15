@@ -1,0 +1,45 @@
+{% extends theme('layout.html')  %}
+{% block title %}{{year}}番号大全-第{{curpage}}页{% endblock %}
+{% block metadesc %}番号大全热度排行{% endblock %}
+{% block metakeywords %}番号大全热度排行{% endblock %}
+
+{%block body%}
+<div class="row">
+  <div id="content" class="9u skel-cell-important">
+    <section>
+      <header>
+        <h2>番号大全</h2>
+      </header>
+
+      {% include theme('_fhlist.html')%}
+
+    </section>
+  </div>
+  <div id="sidebar" class="3u">
+    <section>
+        <div class="header_bg">
+          {% include theme('_search_side.html')%}
+        </div>
+        <div class="divider"></div>
+        <div class="w_sidebar">
+            {% include theme('recomm/cast/cast_'~[1,4]|random~'.html')%}
+        </div>
+    </section>
+  </div>
+</div>
+<div>
+  <script>
+
+  	$(function(){
+  		var page = {{curpage}};
+  		if(!page)
+  			page = 1;
+  		$(".pagination").createPage({
+  				totalPage:{{pages}},
+  				currPage:page,
+  				link_to:"/fhs/__id__"
+  		});
+  	})
+  	</script>
+</div>
+{% endblock %}

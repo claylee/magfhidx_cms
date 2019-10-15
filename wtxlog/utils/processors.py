@@ -4,11 +4,11 @@ import random
 import datetime
 
 from flask import Markup, render_template_string
-from flask.ext.restless.search import create_query
+from flask_restless.search import create_query
 from ..models import db, Article, Category, Tag, FriendLink, \
     Label, Topic, Setting
 from helpers import get_category_ids
-
+from sqlalchemy.sql import text
 
 def utility_processor():
     """自定义模板处理器"""
@@ -128,12 +128,13 @@ def utility_processor():
         """
         # 获取与本文章标签相同的所有文章ID
         article = Article.query.get(article_id)
+        from_st = 'SELECT article_id FROM \
+                        article_tags WHERE tag_id IN \
+                        (SELECT tag_id FROM article_tags \
+                        WHERE article_id=:article_id)'
         if article:
             ids = db.session.query('article_id') \
-                            .from_statement('SELECT article_id FROM '
-                                            'article_tags WHERE tag_id IN '
-                                            '(SELECT tag_id FROM article_tags '
-                                            'WHERE article_id=:article_id)') \
+                            .from_statement(text(from_st)) \
                             .params(article_id=article_id).all()
 
             article_ids = [_id[0] for _id in ids]

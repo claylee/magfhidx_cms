@@ -20,8 +20,8 @@ if os.environ.get('FLASK_COVERAGE'):
     COV.start()
 
 from wtxlog import create_app, db, get_appconfig
-from flask.ext.script import Manager
-from flask.ext.migrate import Migrate, MigrateCommand
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
 # bae, sae, production, local(default)
 app = create_app(os.getenv('APP_CONFIG') or str(get_appconfig()) or 'default')
@@ -35,7 +35,7 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def deploy():
     """Run deployment tasks."""
-    from flask.ext.migrate import upgrade
+    from flask_migrate import upgrade
     from wtxlog.models import Role
 
     upgrade()

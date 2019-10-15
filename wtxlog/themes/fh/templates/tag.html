@@ -13,6 +13,7 @@
 
 {% block crumb %}<a href="{{ url_for('main.tags') }}">Tags</a><b>&#187;</b>{{ tag.name }}{% endblock %}
 
-{% block body %}
-  {% include theme('_fhlist.html') %}
+{% block main %}
+  {% include theme('article_lists.html') %}
 {% endblock %}
+

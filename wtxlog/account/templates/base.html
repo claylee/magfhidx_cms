@@ -17,8 +17,8 @@
 ] -%}
 {% set active_page = active_page|default('index') -%}
 {% set permission = 0 %}
-{% if current_user.is_authenticated() %}{% set permission = 1 %}{% endif %}
-{% if current_user.is_administrator() %}{% set permission = 2 %}{% endif %}
+{% if current_user.is_authenticated %}{% set permission = 1 %}{% endif %}
+{% if current_user.is_administrator %}{% set permission = 2 %}{% endif %}
 <body>
   <div class="container">
   <div class="navbar">

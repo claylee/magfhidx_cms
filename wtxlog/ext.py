@@ -5,11 +5,11 @@ import datetime
 from urllib2 import quote
 from flask import current_app, request, redirect, url_for
 from functools import wraps
-from flask.ext.babelex import Babel
-from flask.ext.cache import Cache as FlaskCache
-from flask.ext.mail import Mail, Message
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
+from flask_babelex import Babel
+from flask_cache import Cache as FlaskCache
+from flask_mail import Mail, Message
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from werkzeug._compat import text_type, to_bytes
 
 
@@ -184,7 +184,6 @@ class WtxlogCache(FlaskCache):
                 # Bypass the cache entirely.
                 if callable(unless) and unless() is True:
                     return f(*args, **kwargs)
-
                 try:
                     cache_key = decorated_function.make_cache_key(*args, **kwargs)
                     if request.MOBILE:
@@ -195,6 +194,12 @@ class WtxlogCache(FlaskCache):
                         raise
                     current_app.logger.exception("Exception possibly due to cache backend.")
                     return f(*args, **kwargs)
+                print(cache_key)
+                print(cache_key)
+                print(cache_key)
+                print(cache_key)
+                print(args)
+                print(kwargs)
 
                 if rv is None:
                     rv = f(*args, **kwargs)

@@ -1,0 +1,114 @@
+{% extends theme('layout.html')  %}
+
+{%block body%}
+{%set fh = article.fanhao%}
+<div class="row">
+    <div name='content' class="9u">
+        <header>
+            <h2><strong>番号：</strong>{{fh.no}}</h2>
+        </header>
+        <section>
+          <div class="row">
+              <div class="4u">
+                  <img class="image full" src="{{fh.img}}" alt="{{fh.no}}"/>
+              </div>
+              <div class="8u">
+                  <ul>
+                      <li>
+                        <p><strong>片名：</strong>{{article.title}}</span></p>
+                      </li>
+                      <li>
+                          <p><strong>演出：</strong>
+                            {% for c in fh.cast %}
+                              <a target="_blank" style="display:inline" href="/cast/{{c}}">{{c}}</a>
+                            {%endfor%}</p>
+                      </li>
+                      <li><span>
+                        <p><strong>片商：</strong>{% if fh.publisher %}<a target="_blank" style="display:inline" href="/publisher/{{fh.publisher|replace('/','[_]')}}">{{fh.publisher}}</a>{%endif%}</span></p>
+                      </li>
+                      <li>
+                        <p><strong>时长：</strong>{{fh.duration or ''}}</span></p>
+                      </li>
+                      <li><p><strong>发行：</strong>{{fh.issuedate or ''}}</p></li>
+                      <li><p><strong>点赞：</strong>{{fh.hot or ''}}</p></li>
+                      <li>
+                        <p><strong>标签：</strong>
+                        {% for c in fh.tags %}
+                        <a href="/fhs_tag/{{c}}" title="{{c}}" target="_blank"
+                          style="display:inline-block;padding:1px"><span class="badge badge-success">{{c}}</span></a>
+                        {%endfor%}</p>
+                      </li>
+                  </ul>
+              </div>
+              <section class="sky-form">
+                <h4>演出</h4>
+                <ul class="style1">
+                    {% for c in castsDetail %}
+                      <li style='display:inline-block'><a href="/cast/{{c['name']}}" title="{{c['name']}}" target="_blank"
+                        style="padding:1px"><img title="{{c['name']}}" alt="{{c['name']}}" width="78" src="{{c['img']}}"/></a></li>
+                    {%endfor%}
+                </ul>
+              </section>
+          </div>
+        </section>
+        {% if article.body_html %}
+          <section>
+            <header>
+              <h3>影片简介</h3>
+            </header>
+            <section>
+              {{article.body_html|safe}}
+            </section>
+          </section>
+        {% endif%}
+        {% if fh.prev_img %}
+          <section>
+            <header>
+              <h3>预览</h3>
+            </header>
+            <section>
+              {%for img in fh.prev_img%}
+          			{% if (loop.index - 1) % 2 == 0%}
+          				<div class="row">
+          			{%endif%}
+      					<div class="6u">
+  								<div class="image full">
+  									<img class="lazy" data-original="{{img}}" />
+  								</div>
+      					</div>
+      				{% if (loop.index) % 2 == 0 or loop.last %}
+      				</div>
+      				{%endif%}
+              {%endfor%}
+            </section>
+          </section>
+        {% endif%}
+        <div class="divider"></div>
+        <section>
+          <div class="row">
+            <header>
+              <h4>{{fh.no}} / 磁力链接下载 <span></span></h4>
+            </header>
+          </div>
+          <ul class="style1">
+            <li>链接1：<a href="{{ config['MAG_DOWNLOAD_SITE1'] }}/search?word={{fh.no}}" target="_blank">在磁力风搜索此部作品</a></li>
+            <li>链接2：<a href="{{ config['MAG_DOWNLOAD_SITE2'] }}/search?word={{fh.no}}&page=1" target="_blank">在cilimao搜索此部作品</a></li>
+          </ul>
+          <div class="row">
+              <p>本站不提供下载，只提供跳转。可能会遇到下载网站打不开的情况。</p>
+          </div>
+        </section>
+        <div class="divider"></div>
+        {% include theme('recomm/fhs/fh_'~range(1, 4) | random~'.html') %}
+    </div>
+    <div id="sidebar" class="3u">
+        <div class="header_bg">
+          {% include theme('_search_side.html')%}
+        </div>
+        <div class="w_sidebar">
+            {% include theme('recomm/cast/cast_'~[1,4]|random~'.html')%}
+        </div>
+
+    </div>
+</div>
+{%endblock%}

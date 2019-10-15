@@ -11,11 +11,11 @@
 
 {% block crumb %}Tags{% endblock %}
 
-{% block body %}
+{% block main %}
 <div class="post">
   <h2 class="">栏目</h2>
   <div class="entry">
-    {% with categories = category_lists(20) %}
+    {% with categories = category_lists() %}
     <ul class="taglist clearfix">
     {% for category in categories -%}
     <li><a href="{{ category.link }}">{{ category.name }}</a>{% if not loop.last %}&nbsp;&nbsp;{% endif %}</li>
@@ -26,7 +26,7 @@
 
   <h2 class="">标签</h2>
   <div class="entry">
-    {% with tags = tag_lists(20) %}
+    {% with tags = tag_lists() %}
     <ul class="taglist clearfix">
     {% for tag in tags -%}
     <li><a href="{{ tag.link }}">{{ tag.name }}</a>({{ tag.count }}){% if not loop.last %}&nbsp;&nbsp;{% endif %}</li>
@@ -36,3 +36,4 @@
   </div>
 </div>
 {% endblock %}
+

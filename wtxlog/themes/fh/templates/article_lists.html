@@ -1,45 +1,38 @@
-{% extends theme('layout.html')  %}
-{% block title %}{{year}}番号大全-第{{curpage}}页{% endblock %}
-{% block metadesc %}番号大全热度排行{% endblock %}
-{% block metakeywords %}番号大全热度排行{% endblock %}
+{% if category %}<h1 class="">Category Archives: {{ category.name }}</h1>{% endif %}
+{% if tag %}<h1 class="">Tag Archives: {{ tag.name }}</h1>{% endif %}
+{% if topic %}<h1 class="">Topic Archives: {{ topic.name }}</h1>{% endif %}
+{% if year or month %}<h1 class="">Monthly Archives: {{ year }}-{{ month }}</h1>{% endif %}
+{% if not keyword %}{% set keyword=None %}{% endif %}
 
-{%block body%}
-<div class="row">
-  <div id="content" class="9u skel-cell-important">
-    <section>
-      <header>
-        <h2>番号大全</h2>
-      </header>
+{% if articles %}
+{% for article in articles %}
+<div class="post" id="article-{{ article.id }}">
+  <ul class="date">
+    <li class="day">{{ article.created|date('%d') }}</li>
+    <li class="month">{{ article.created|date('%m') }}月</li>
+  </ul>
 
-      {% include theme('_fhlist.html')%}
+  <div class="title">
+    <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a class="keyword" href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title|emphasis(keyword)|safe }}</a></h2>
+    <p class="postmeta">Post by {{ article.author }} at {{
+    article.created|date('%Y') }}. Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
+    {{ article.hits }} Views.</p></div>
 
-    </section>
-  </div>
-  <div id="sidebar" class="3u">
-    <section>
-        <div class="header_bg">
-          {% include theme('_search_side.html')%}
-        </div>
-        <div class="divider"></div>
-        <div class="w_sidebar">
-            {% include theme('recomm/cast/cast_'~[1,4]|random~'.html')%}
-        </div>
-    </section>
+  <div class="clear"></div>
+  <div class="entry">
+    <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
+    {% if article.has_more %}<p><a href="{{ article.link }}" rel="nofollow">Read More...</a>{% endif %}
   </div>
 </div>
-<div>
-  <script>
 
-  	$(function(){
-  		var page = {{curpage}};
-  		if(!page)
-  			page = 1;
-  		$(".pagination").createPage({
-  				totalPage:{{pages}},
-  				currPage:page,
-  				link_to:"/fhs/__id__"
-  		});
-  	})
-  	</script>
+{% endfor %}
+{% else %}
+  <p>没有内容</p>
+{% endif %}
+
+{% if pagination and pagination.page_count > 1 %}
+<div class="pagenavi">
+{{ pagination.pager('$link_first $link_previous ~2~ $link_next $link_last (Page $page/$page_count)') }}
 </div>
-{% endblock %}
+{% endif %}
+
