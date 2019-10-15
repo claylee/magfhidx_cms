@@ -11,7 +11,7 @@ from werkzeug.contrib.atom import AtomFeed
 from werkzeug._compat import to_bytes
 from webhelpers.paginate import Page, PageURL
 from flask_mobility.decorators import mobile_template
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, not_
 from sqlalchemy.sql import func
 
 from ..decorators import permission_required
@@ -731,6 +731,18 @@ def pullfh(template):
     #pagination.page_count = 10
     return render_template(template)
 
+
+@main.route('/pullcast/', methods=['GET','POST'])
+@mobile_template('{mobile/}%s')
+def pullcast(template):
+    template = template % "api/casts.html"
+
+    #page_url = url_for("main.pullfh", page=page)
+    #pagination=Page(None,page=1,items_per_page=20,url=page_url)
+    #pagination.page_count = 10
+    return render_template(template)
+
+
 from ..utils.fanhao import *
 @main.route('/edit_fh/<no>', methods=['GET','POST'])
 @mobile_template('{mobile/}%s')
@@ -741,4 +753,15 @@ def edit_fh(template,no):
     r = requests.get(api_url)
 
     fanhao(r.json())
+    return "ok"
+
+@main.route('/edit_cast/<name>', methods=['GET','POST'])
+@mobile_template('{mobile/}%s')
+def edit_cast(template,name):
+    template = template % "api/fh_article.html"
+
+    api_url = "http://localhost:5001/api/get_cast/"+name
+    r = requests.get(api_url)
+
+    cast(r.json())
     return "ok"

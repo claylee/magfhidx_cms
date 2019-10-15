@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from ..models import *
+from flask_themes import render_theme_template, get_theme
+from ..utils.helpers import render_template
 
 def fanhao(f):
+    #theme_name = get_theme(current_app.config.get('THEME', 'default'))
     article = Article()
 
     cate = Category.query.filter(Category.name == u"番号").first()
@@ -18,12 +21,17 @@ def fanhao(f):
     for tag in tags:
         article.tags.append(tag)
 
-    article.title = u"[{0}]{1}".format(f['no'],f['name'])
+    article.title = u"[{0}]{1}".format(f['no'],f['name'][0:f['name'].find(u'番号:')])
     #article.longslug = f['no
-    article.body = u'{0}{1}'.format(f['no'],f['desc'] if f['desc'] else '')
-    article.thumbnail = f['imgpost']
+    #article.body = u'{0}{1}'.format(f['no'],f['desc'] if f['desc'] else '')
     print("======f['no=========")
     print(f['no'])
+
+    article_temp = "/body_templates/fh.html"
+    print(f)
+    print(type(f))
+    article.body = render_template(article_temp,fh = f)
+    article.thumbnail = f['img'] if f['imgpost'] is None else f['imgpost']
 
     article.seokey = u'番号[{0}],{1},{2},{3}'.format(
         f['no'],f['name'],f['name_jp'],u','.join(f['cast']),f['publisher'])
@@ -40,6 +48,52 @@ def fanhao(f):
         , f['desc'] if f['desc'] else '',
         f['publisher'], f['issuedate']
     )
+
+    article.hit = f['hot']
+    article.created = datetime.today()
+    article.last_modified = datetime.today()
+
+    db.session.add(article)
+    db.session.commit()
+
+
+def cast(f):
+    article = Article()
+
+    cate = Category.query.filter(Category.name == u"女优介绍").first()
+    if cate:
+        article.category_id = cate.id
+    else:
+        raise Exception("Category not exists")
+
+    topics = Topic.query.filter(Topic.name.in_(f['name'])).all()
+    for topic in topics:
+        article.topics.append(topic)
+
+    tags = Tag.query.filter(Tag.name.in_(f['tags'])).all()
+    for tag in tags:
+        article.tags.append(tag)
+
+    article.title = u"{0}".format(f['name'])
+    #article.longslug = f['no
+    #article.body = u'{0}{1}'.format(f['no'],f['desc'] if f['desc'] else '')
+    print("======f['no=========")
+    print(f['name'])
+
+    cast_temp = "/body_templates/cast.html"
+    print(f)
+    print(type(f))
+    article.body = render_template(cast_temp,cast = f)
+    article.thumbnail = f['img'] if f['imgpost'] is None else f['imgpost']
+
+    article.seokey = u'番号[{0}],{1},{2},{3}'.format(
+        f['castdate'],f['name'],f['alias'],u','.join(f['castdate']),f['castdate'])
+
+    article.seotitle = u"{0}{1}-{2}-{3}".format(
+        f['castdate'], f['name'], f['tags'][0], f['castdate']
+    )
+
+    article.seodesc = u"f['desc']"
 
     article.hit = f['hot']
     article.created = datetime.today()

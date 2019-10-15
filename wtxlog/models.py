@@ -45,7 +45,10 @@ class Cast(db.Model):
 
     @property
     def tags(self):
-        return self._tags.split(",")
+        if self._tags:
+            return self._tags.split(",")
+        else:
+            return []
 
     @property
     def img(self):
@@ -719,7 +722,7 @@ class Article(db.Model):
     @cached_property
     def shortlink(self):
         return url_for('main.article', article_id=self.id)
-    
+
 
     @cached_property
     def get_next(self):

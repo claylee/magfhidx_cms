@@ -16,23 +16,23 @@
 
 {% block main %}
 <div class="post" id="article-{{ article.id }}">
-  <ul class="date">
-    <li class="day">{{ article.created|date('%d') }}</li>
-    <li class="month">{{ article.created|date('%m') }}月</li>
-  </ul>
-
   <div class="title">
-    <h1 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
-    <p class="postmeta">Post by {{ article.author }} at {{ article.created|date('%Y') }}.
-    Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
-    <span id="articlehits"><img src="{{ theme_static('images/loading.gif') }}" /></span> Views.</p></div>
+    <header>
+      <h2 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
+    </header>
+    <p class="postmeta">{{article.created|date('%Y') }}年{{ article.created|date('%m') }}月{{ article.created|date('%d') }}日 Post by
+{{ article.author }} . 分类: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
+    {{ article.hits }} Views.</p>
+  </div>
 
+  <div class="clear"></div>
+    {{ article.summary|safe }}
   <div class="clear"></div>
   <div class="entry">
     {{ article.body_html|safe }}
 
     <p>本文链接: <a href="{{ article.link }}" title="{{ article.title }}">{{ article.link }}</a> <br/>
-    版权所有。转载时必须以链接形式注明作者和原始出处及本声明。</p>
+    </p>
 
     {% if article.tags %}
     <div id="tags">Tags: &nbsp; {% for tag in article.tags %}<a href="{{ tag.link }}">{{ tag.name }}</a>{%if not loop.last %},&nbsp;{% endif %}{% endfor %}. </div>
@@ -44,7 +44,6 @@
 
     <!-- UJian Button BEGIN -->
     <div class="ujian-hook"></div>
-    <a rel="nofollow" href="http://www.ujian.cc" style="border:0;"><img src="http://img.ujian.cc/pixel.png" alt="友荐云推荐" style="border:0;padding:0;margin:0;" /></a>
     <!-- UJian Button END -->
 
   </div>
@@ -85,4 +84,3 @@
   <script src="{{ theme_static('js/highlight.min.js') }}"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 {%- endblock %}
-

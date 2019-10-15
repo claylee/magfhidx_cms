@@ -1,0 +1,87 @@
+<div name='content' class="">
+    <section>
+      <div class="row">
+          <div class="4u">
+              <img class="image full" src="{{fh['img']}}" alt="{{fh['no']}}"/>
+          </div>
+          <div class="8u">
+              <ul>
+                  <li>
+                    <p><strong>片名：</strong>{{fh['name_jp']}}</span></p>
+                  </li>
+                  <li>
+                      <p><strong>演出：</strong>
+                        {% for c in fh['cast'] %}
+                          <a target="_blank" style="display:inline" href="/cast/{{c}}">{{c}}</a>
+                        {%endfor%}</p>
+                  </li>
+                  <li><span>
+                    <p><strong>片商：</strong>{% if fh['publisher'] %}<a target="_blank" style="display:inline"
+                      href="/publisher/{{fh['publisher']|replace('/','[_]')}}"
+                      >{{fh['publisher']}}</a>{%endif%}</span></p>
+                  </li>
+                  <li>
+                    <p><strong>时长：</strong>{{fh['duration'] or ''}}</span></p>
+                  </li>
+                  <li><p><strong>发行：</strong>{{fh['issuedate'] or ''}}</p></li>
+                  <li><p><strong>点赞：</strong>{{fh['hot'] or ''}}</p></li>
+                  <li>
+                    <p><strong>标签：</strong>
+                    {% for c in fh['tags'] %}
+                    <a href="/fhs_tag/{{c}}" title="{{c}}" target="_blank"
+                      style="display:inline-block;padding:1px"><span class="badge badge-success">{{c}}</span></a>
+                    {%endfor%}</p>
+                  </li>
+              </ul>
+          </div>
+      </div>
+    </section>
+    {% if fh['desc'] %}
+      <section>
+        <header>
+          <h3>影片简介</h3>
+        </header>
+        <section>
+          {{fh['desc']|safe}}
+        </section>
+      </section>
+    {% endif%}
+    {% if fh['prev_img'] %}
+      <section>
+        <header>
+          <h3>预览</h3>
+        </header>
+        <section>
+          {%for img in fh['prev_img']%}
+            {% if (loop.index - 1) % 2 == 0%}
+              <div class="row">
+            {%endif%}
+            <div class="6u">
+              <div class="image full">
+                <img class="lazy" data-original="{{img}}" />
+              </div>
+            </div>
+          {% if (loop.index) % 2 == 0 or loop.last %}
+          </div>
+          {%endif%}
+          {%endfor%}
+        </section>
+      </section>
+    {% endif%}
+    <div class="divider"></div>
+    <section>
+      <div class="row">
+        <header>
+          <h4>{{fh['no']}} / 磁力链接下载 <span></span></h4>
+        </header>
+      </div>
+      <ul class="style1">
+        <li><a href="{{ config['MAG_DOWNLOAD_SITE1'] }}/search?word={{fh['no']}}" target="_blank">磁力链接1</a></li>
+        <li><a href="{{ config['MAG_DOWNLOAD_SITE2'] }}/search?word={{fh['no']}}&page=1" target="_blank">磁力链接2</a></li>
+      </ul>
+      <div class="row">
+          <p>本站不提供下载，只提供跳转。可能会遇到下载网站打不开的情况。</p>
+      </div>
+    </section>
+    <div class="divider"></div>
+</div>

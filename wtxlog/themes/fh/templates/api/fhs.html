@@ -17,6 +17,7 @@
   }
 </style>
 <div>
+  <input id="ckdesc" type="checkbox" name="desc" value="check desc">
   <table id="fhs" style="border:1px solid #336699">
       <thead>
           <tr>
@@ -57,8 +58,13 @@
   var load_fhs = function()
   {
     var page = $(this).attr("page");
+    u = 'http://localhost:5001/api/get_fanhao_list/'+page+'/20';
+    if($("#ckdesc").prop("checked"))
+    {
+      u='http://localhost:5001/api/get_fanhao_list/desc/1/'+page+'/20';
+    }
     $.ajax({
-      url:'http://localhost:5001/api/get_fanhao_list/'+page+'/20',
+      url:u,
       dataType:"json",
       success:function(msg){
         $("#fhs>tbody").empty();
@@ -85,12 +91,23 @@
     });
   }
 
-  for(var i=1; i< 12; i++)
+  ucount = 'http://localhost:5001/api/get_fanhao_count/';
+  if($("#ckdesc").prop("checked"))
   {
-    var page_idx = $("<a href='javascript:void(0)' page='"+i+"'>第"+ i +"页</a>");
-    page_idx.click(load_fhs);
-    $('.pagenavi').append(page_idx);
+    ucount='http://localhost:5001/api/get_fanhao_count/desc/1/';
   }
+  $.ajax({
+    url:ucount,
+    success:function(e){
+      var c = parseInt(e);
+      for(var i=1; i< c/20; i++)
+      {
+        var page_idx = $("<a href='javascript:void(0)' page='"+i+"'>第"+ i +"页</a>");
+        page_idx.click(load_fhs);
+        $('.pagenavi').append(page_idx);
+      }
+    }
+  });
 
 
 })()

@@ -1,0 +1,43 @@
+<div class="row">
+    <div id="content" class="">
+        <div class="row">
+            <div class="4u">
+                <img class="image full" src="{{cast['img']}}" alt="{{cast['name']}}"/>
+            </div>
+            <div class="8u">
+                <header>
+                  <h2>{{cast['name']}}</h2>
+                </header>
+                <div class="">
+                    <p><strong>别名：</strong>{{cast['alias']}}</p>
+                </div>
+                <div class="">
+                    <p><strong>三围：</strong>{{cast['body']}}</p>
+                </div>
+                <div class="">
+                    <p><span class="card-text"><strong>出生日期：</strong>{{cast['birthdate']}}</span><br /></p>
+                </div>
+                <div class="">
+                    <p><span class="card-text"><strong>出道时间：</strong>{{cast['castdate']}}</span><br /></p>
+                </div>
+                <div class="">
+                    <p><strong>点赞：</strong>{{cast['hot']}}</p>
+                </div>
+
+                <span class="card-text">
+                    {% for c in cast['tags'] %}
+                      <a href="/casts_tag/{{c}}"><span class="badge badge-primary">{{c}}</span></a>
+                    {%endfor%}
+                </span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <section>
+            <header>
+              <h2>演员介绍</h2>
+            </header>
+            <p><span class="byline">{{cast['desc']}}</span></p>
+        </section>
+        <div class="divider"></div>
+    </div>
+</div>
