@@ -39,5 +39,20 @@
             <p><span class="byline">{{cast['desc']}}</span></p>
         </section>
         <div class="divider"></div>
+        {% for article in articles %}
+
+          <div class="clear"></div>
+          <div class="row">
+            <div class="5u entry">
+              <img class="image full" src="{{article['no']}}" alt="{{article['no']}}"/>
+            </div>
+            <div class="7u">
+              <p class="keyword">{{ article['no'] }}</p>
+              <p class="keyword">{{ article['desc']|safe }}</p>
+            </div>
+          </div>
+        <hr/>
+        <div class="clear"></div>
+        {% endfor %}
     </div>
 </div>

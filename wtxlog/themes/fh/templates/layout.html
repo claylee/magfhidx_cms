@@ -34,7 +34,7 @@
     <!-- Monochromed -->
     <!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
     <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script-->
-    <script type='text/javascript' src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script type='text/javascript' src="{{ theme_static('jquery-3.3.1.js') }}"></script>
     <script type='text/javascript' src="{{ theme_static('jquery.lazyload.min.js') }}"></script>
     <script src="{{ theme_static('monochromed/js/skel.min.js') }}"></script>
     <script src="{{ theme_static('monochromed/js/skel-panels.min.js') }}"></script>
@@ -243,34 +243,14 @@
 
           <div id="sidebar" class="3u">
             {% block sidebar %}
-            <h2>Wechat</h2>
-            <p align="center"><img width="180px" height="180px" src="{{ theme_static('images/digwtx-qrcode.png') }}" alt="digwtx-wechat-qrcode"/></p>
 
             {% set cate = None %}
             {% if article %}{% set cate = article.category %}{% endif %}
             {% if category %}{% set cate = category %}{% endif %}
 
-            {% with articles = get_latest_articles(cate, 15) %}
-            {% if articles %}
-            <h2>Recent Posts</h2>
-            <ul>
-              {%- for article in articles %}
-              <li><a href="{{ article.link|e }}" title="{{ article.title }}">{{ article.title|e }}</a></li>
-              {%- endfor %}
-            </ul>
-            {% endif %}
-            {% endwith %}
+            {% include theme('_recent.html') %}
 
-            {% with articles = get_top_articles(limit=15) %}
-            {% if articles %}
-            <h2>Top 15 Posts</h2>
-            <ul>
-              {%- for article in articles %}
-              <li><a href="{{ article.link|e }}" title="{{ article.title }}">{{ article.title|e }}</a></li>
-              {%- endfor %}
-            </ul>
-            {% endif %}
-            {% endwith %}
+            {% include theme('_tophit.html') %}
 
             {% with articles = get_recommend_articles(cate, limit=15) %}
             {% if articles %}

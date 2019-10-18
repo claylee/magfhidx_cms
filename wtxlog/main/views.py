@@ -762,6 +762,6 @@ def edit_cast(template,name):
 
     api_url = "http://localhost:5001/api/get_cast/"+name
     r = requests.get(api_url)
-
+    print(r.json())
     cast(r.json())
     return "ok"

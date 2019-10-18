@@ -1,7 +1,7 @@
-{% if category %}<h1 class="">Category Archives: {{ category.name }}</h1>{% endif %}
-{% if tag %}<h1 class="">Tag Archives: {{ tag.name }}</h1>{% endif %}
-{% if topic %}<h1 class="">Topic Archives: {{ topic.name }}</h1>{% endif %}
-{% if year or month %}<h1 class="">Monthly Archives: {{ year }}-{{ month }}</h1>{% endif %}
+{% if category %}<header><h2 class="">Category Archives: {{ category.name }}</h2></header>{% endif %}
+{% if tag %}<header><h2 class="">Tag Archives: {{ tag.name }}</h2></header>{% endif %}
+{% if topic %}<header><h2 class="">Topic Archives: {{ topic.name }}</h2></header>{% endif %}
+{% if year or month %}<header><h2 class="">Monthly Archives: {{ year }}-{{ month }}</h2></header>{% endif %}
 {% if not keyword %}{% set keyword=None %}{% endif %}
 
 {% if articles %}
@@ -9,9 +9,7 @@
 
   <div class="post" id="article-{{ article.id }}">
     <div class="title">
-      <header>
-        <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a class="keyword" href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title|emphasis(keyword)|safe }}</a></h2>
-      </header>
+      <h3 class="topic">{% if article.ontop %}[置顶]{% endif %}<a class="keyword" href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title|emphasis(keyword)|safe }}</a></h3>
       <p class="postmeta">{{article.created|date('%Y') }}年{{ article.created|date('%m') }}月{{ article.created|date('%d') }}日 Post by
 {{ article.author }} . 分类: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
       {{ article.hits }} Views.</p>
@@ -19,13 +17,23 @@
 
     <div class="clear"></div>
     <div class="row">
-      <div class="5u entry">
-        <img class="image full" src="{{article.thumbnail}}" alt="{{article.title}}"/>
-      </div>
-      <div class="7u">
-        <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
-        {% if article.has_more %}<p><a href="{{ article.link }}" rel="nofollow">Read More...</a>{% endif %}
-      </div>
+      {%if article.category.name == "女优介绍"%}
+        <div class="3u entry">
+          <img class="image full" src="{{article.thumbnail}}" alt="{{article.title}}"/>
+        </div>
+        <div class="9u">
+          <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
+          {% if article.has_more %}<p><a href="{{ article.link }}" rel="nofollow">Read More...</a>{% endif %}
+        </div>
+      {%else%}
+        <div class="5u entry">
+          <img class="image full" src="{{article.thumbnail}}" alt="{{article.title}}"/>
+        </div>
+        <div class="7u">
+          <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
+          {% if article.has_more %}<p><a href="{{ article.link }}" rel="nofollow">Read More...</a>{% endif %}
+        </div>
+      {%endif%}
     </div>
   </div>
   <hr/>

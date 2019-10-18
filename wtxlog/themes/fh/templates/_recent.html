@@ -1,0 +1,19 @@
+{% with articles = get_latest_articles(cate, 15) %}
+{% if articles %}
+<header>
+<h2>Recent Posts</h2>
+</header>
+<ul>
+  {%- for article in articles %}
+  <li>
+  <a href="{{ article.link|e }}" target="_blank"><img src="{{ article.thumbnail }}" alt="{{article.title}}" width="78" height="110"></a>
+  <p><a href="{{ article.title|e }}" target="_blank">{{ article.title|e }}</a></p>
+  <p>
+    {{ article.tags.name|e|join(',') }}
+  </p>
+  <p class="posted">2016-06-10  |  16270</p>
+  </li>
+  {%- endfor %}
+</ul>
+{% endif %}
+{% endwith %}

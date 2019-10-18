@@ -63,6 +63,7 @@ def ini_recom_cast():
     print(cast_page.total)
     castlist = cast_page.items
 
+    articles
 
     cast_all = Cast.query.filter(Cast.name.in_((cast_names)))
     for c in cast_all:

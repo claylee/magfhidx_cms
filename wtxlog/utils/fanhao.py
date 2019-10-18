@@ -83,7 +83,7 @@ def cast(f):
     cast_temp = "/body_templates/cast.html"
     print(f)
     print(type(f))
-    article.body = render_template(cast_temp,cast = f)
+    article.body = render_template(cast_temp,cast = f, articles = f['fhs'])
     article.thumbnail = f['img'] if f['imgpost'] is None else f['imgpost']
 
     article.seokey = u'番号[{0}],{1},{2},{3}'.format(
