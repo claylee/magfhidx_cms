@@ -19,6 +19,12 @@
 	{
 	}
 
+	h1
+	{
+		font-size: 1.5em;
+		line-height: 1em;
+	}
+
 	h2, h3, h4, h5, h6
 	{
 		font-size: 1.5em;
@@ -59,6 +65,11 @@
 	header
 	{
 		margin-bottom: 2em;
+	}
+
+	header h1
+	{
+		letter-spacing: 1px;
 	}
 
 	header h2
@@ -190,12 +201,12 @@
 		margin-bottom: 3em;
 	}
 
-		#logo h1
+		#logo p
 		{
 			color: #FFF;
 		}
 
-		#logo h1 a
+		#logo p a
 		{
 			display: block;
 			letter-spacing: 1px;
@@ -237,6 +248,11 @@
 	#content header
 	{
 		margin-bottom: 2em;
+	}
+
+	#content header h1
+	{
+		font-size: 2em;
 	}
 
 	#content header h2

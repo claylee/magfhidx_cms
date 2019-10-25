@@ -35,7 +35,7 @@
 			label: lang.label,
 			title: lang.panelTitle,
 			toolbar: 'styles,' + order,
-			allowedContent: style,
+			allowedContent: true,
 			requiredContent: style,
 
 			panel: {

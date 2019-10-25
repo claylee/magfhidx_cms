@@ -94,7 +94,13 @@
 
 		header h2
 		{
-			letter-spacing: -1px;
+			letter-spacing: 1px;
+			font-weight: 700;
+		}
+
+		header h1
+		{
+			letter-spacing: 1px;
 			font-weight: 700;
 		}
 
@@ -668,3 +674,8 @@ page
 			border-top-right-radius: 3px;
 			border-bottom-right-radius: 3px;
 		}
+
+		.vd-link {margin:10px 0 0;}
+		.vd-link a{display:block;font-size:18px;text-align:center;color: #fff;width:70%;height:50px;line-height:50px;margin:0 auto;border-radius:3px;box-shadow: 0 1px 3px rgba(34,25,25,0.2);background:#207ee2;background: linear-gradient(135deg, #207ee2 0%,#28a745 100%);}
+		.vd-link a img{vertical-align: 0px;margin-right: 6px;}
+		.vd-link a:hover{color: #fff;opacity:.85;}

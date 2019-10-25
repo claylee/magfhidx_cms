@@ -16,7 +16,7 @@
 
 {% block crumbwrap %}{% endblock %}
 
-{% block logo %}<h1 class="logo">{{ logo() }}</h1>{% endblock %}
+{% block logo %}<p class="logo">{{ logo() }}</p>{% endblock %}
 
 {% block main %}
   {% include theme('article_lists.html') %}
@@ -26,7 +26,7 @@
 
 {% with flinks = friendlinks() %}
 {% if flinks %}
-<h2>Links</h2>
+<h1>Links</h1>
 <ul>
   {% for flink in flinks -%}
   <li><a href="{{ flink.url }}" title="{{ flink.title }}" target="_blank">{{ flink.anchor }}</a></li>

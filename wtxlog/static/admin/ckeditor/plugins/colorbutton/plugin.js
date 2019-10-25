@@ -34,7 +34,7 @@ CKEDITOR.plugins.add( 'colorbutton', {
 				modes: { wysiwyg: 1 },
 				editorFocus: 0,
 				toolbar: 'colors,' + order,
-				allowedContent: style,
+				allowedContent: true,
 				requiredContent: style,
 
 				panel: {

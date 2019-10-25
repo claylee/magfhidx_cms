@@ -18,7 +18,7 @@
 <div class="post" id="article-{{ article.id }}">
   <div class="title">
     <header>
-      <h2 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
+      <h1 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
     </header>
     <p class="postmeta">{{article.created|date('%Y') }}年{{ article.created|date('%m') }}月{{ article.created|date('%d') }}日 Post by
 {{ article.author }} . 分类: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.

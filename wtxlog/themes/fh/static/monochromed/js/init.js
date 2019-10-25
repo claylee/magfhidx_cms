@@ -3,6 +3,7 @@
     templated.co @templatedco
     Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
+
 skel.init({
 	prefix: window['skel-prefix'],
 	resetCSS: true,
@@ -53,7 +54,4 @@ skel.init({
 	}
 
 
-});
-skel.bind("init", function() {
-    alert("Initialized!");
 });

@@ -1,0 +1,57 @@
+
+    <div id="content" class="">
+        <section>
+          <header>
+            <h2>{{cast['name']}}介绍和经历</h2>
+          </header>
+          <div class="row">
+              <div class="4u">
+                  <img class="image full" src="{{cast['img']}}" alt="{{cast['name']}}"/>
+              </div>
+              <div class="8u">
+                  <div class="">
+                      <p><strong>别名：</strong>{{cast['alias']}}</p>
+                  </div>
+                  <div class="">
+                      <p><strong>三围：</strong>{{cast['body']}}</p>
+                  </div>
+                  <div class="">
+                      <p><span class="card-text"><strong>出生日期：</strong>{{cast['birthdate']}}</span><br /></p>
+                  </div>
+                  <div class="">
+                      <p><span class="card-text"><strong>出道时间：</strong>{{cast['castdate']}}</span><br /></p>
+                  </div>
+                  <div class="">
+                      <p><strong>点赞：</strong>{{cast['hot']}}</p>
+                  </div>
+
+                  <span class="card-text">
+                      {% for c in cast['tags'] %}
+                        <a href="/casts_tag/{{c}}"><span class="badge badge-primary">{{c}}</span></a>
+                      {%endfor%}
+                  </span>
+              </div>
+          </div>
+          <p><span class="byline">{{cast['desc']}}</span></p>
+        </section>
+        <section>
+        <header>
+          <h2>{{cast['name']}}作品番号</h2>
+        </header>
+        {% for article in articles  %}
+          {% if article.desc or article.desc_jp or article.name %}
+          <div class="row">
+            <div class="6u">
+              <img class="image full" src="{{article.img}}" alt="{{article['no']}} 封面"/>
+            </div>
+            <div class="12u">
+              <h3>{{ article['no'] }}:{{ article['name_jp'] or article['name'] }} </h3>
+              <p class="keyword">{{ article['issuedate'] }}</p>
+              <p class="keyword">{{ article['desc_jp']|safe or (article['desc']|safe or '')}}</p>
+            </div>
+          </div>
+          {% endif %}
+        </section>
+        {% endfor %}
+        <a href="#" class="btn">查看{{cast['name']}}所有番号</a>
+    </div>

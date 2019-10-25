@@ -10,7 +10,7 @@
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
-    window['skel-prefix'] = "{{ theme_static('monochromed/css/style') }}";
+    window['skel-prefix'] = "{{ theme_static('iridium/css/style') }}";
     console.log(window['skel-prefix']);
     </script>
     <title>{% block title %}{% endblock %}-番号狗|fanhaogo</title>
@@ -29,19 +29,20 @@
     <meta name="referrer" content="{% block metareferrer %}{% endblock %}" />
 
     <!--link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'-->
-    <link rel="stylesheet" href="{{ theme_static('monochromed/css/google.font.family.css') }}" />
+    <link rel="stylesheet" href="{{ theme_static('iridium/css/google.font.family.css') }}" />
     <!-- Custom Theme files -->
     <!-- Monochromed -->
     <!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
     <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script-->
     <script type='text/javascript' src="{{ theme_static('jquery-3.3.1.js') }}"></script>
     <script type='text/javascript' src="{{ theme_static('jquery.lazyload.min.js') }}"></script>
-    <script src="{{ theme_static('monochromed/js/skel.min.js') }}"></script>
-    <script src="{{ theme_static('monochromed/js/skel-panels.min.js') }}"></script>
-    <script src="{{ theme_static('monochromed/js/init.js') }}"></script>
+    <script src="{{ theme_static('iridium/js/skel.min.js') }}"></script>
+    <script src="{{ theme_static('iridium/js/skel-panels.min.js') }}"></script>
+    <script src="{{ theme_static('iridium/js/init.js') }}"></script>
     <noscript>
-      <link rel="stylesheet" href="{{ theme_static('monochromed/css/skel-noscript.css') }}" media="all" />
-      <link rel="stylesheet" href="{{ theme_static('monochromed/css/style.css') }}" media="all"/>
+      <link rel="stylesheet" href="{{ theme_static('iridium/css/skel-noscript.css') }}" media="all" />
+      <link rel="stylesheet" href="{{ theme_static('iridium/css/style.css') }}" media="all"/>
+      <link rel="stylesheet" href="{{ theme_static('iridium/css/style-desktop.css') }}" media="all"/>
     </noscript>
     <style type="text/css">
       #fhs>thead th
@@ -188,12 +189,12 @@
       </div>
 
     <!-- Header -->
-			<header id="header">
+			<div id="header">
 				<div class="container">
         <!-- Logo -->
           <div id="logo">
-            <h1><a href="/">番号狗</a></h1>
-            <span>番号本——最全番号</span>
+            <p><a href="/">番号狗</a></p>
+            <span>番号狗</span>
           </div>
 					<nav id="nav">
 						<ul>
@@ -203,9 +204,8 @@
   						<li><a href="/publishers">番号系列</a></li>
 						</ul>
 					</nav>
-					<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
 				</div>
-			</header>
+			</div>
 
     <!-- header -->
     {% block header %}{% endblock%}
@@ -219,7 +219,7 @@
 
         </div>
         <div class="row">
-          <div name='content' class="content 9u">
+          <div name='content' id="content" class="content 9u">
           {% block main %}
             <div class="article" id="article-1859">
               <ul class="date">

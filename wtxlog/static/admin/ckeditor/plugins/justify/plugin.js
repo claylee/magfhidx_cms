@@ -63,6 +63,7 @@
 		else
 			this.requiredContent = blockTag + '{text-align}';
 
+    /*
 		this.allowedContent = {
 			'caption div h1 h2 h3 h4 h5 h6 p pre td th li': {
 				// Do not add elements, but only text-align style if element is validated by other rule.
@@ -71,6 +72,7 @@
 				classes: this.cssClassName || null
 			}
 		};
+    */
 
 		// In enter mode BR we need to allow here for div, because when non other
 		// feature allows div justify is the only plugin that uses it.

@@ -80,7 +80,7 @@ def cast(f):
     print("======f['no=========")
     print(f['name'])
 
-    cast_temp = "/body_templates/cast.html"
+    cast_temp = "/body_templates/cast-intro.html"
     print(f)
     print(type(f))
     article.body = render_template(cast_temp,cast = f, articles = f['fhs'])
