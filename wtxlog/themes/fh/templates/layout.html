@@ -137,6 +137,7 @@
                 }
             })(jQuery);
     </script>
+    <script language="javascript" type="text/javascript" src="{{ theme_static('js/util.js') }}"></script>
 </head>
 
 {# 面包屑导航开始 #}
@@ -157,7 +158,7 @@
 {# 定义导航菜单 #}
 {% set navigation_bar = [
     (url_for('main.index'), 'index', 'Home'),
-    (url_for('main.topics'), 'topics', 'Topics'),
+    (url_for('main.category',longslug='女优介绍'), 'category.女优介绍', 'category.女优介绍'),
     (url_for('main.tags'), 'tags', 'Tags'),
     (url_for('main.flatpage', slug='about'), 'about', 'About'),
 ] -%}
@@ -178,16 +179,6 @@
     })();
     </script>
 
-
-      <div>
-        <form action="{{ url_for('main.search') }}" method="GET">
-          <div>
-            <input type="text" value="Search..." onfocus="if (value =='Search...'){value =''}" onblur="if (value ==''){value='Search...'}" name="keyword" id="keyword" />
-            <input type="submit" id="searchsubmit" value="" />
-          </div>
-        </form>
-      </div>
-
     <!-- Header -->
 			<div id="header">
 				<div class="container">
@@ -199,9 +190,9 @@
 					<nav id="nav">
 						<ul>
   						<li class="active"><a href="/">首页</a></li>
-  						<li><a href="/fhs">番号大全</a></li>
-  						<li><a href="/topics">女优排行</a></li>
-  						<li><a href="/publishers">番号系列</a></li>
+  						<li><a href="{{url_for('main.category',longslug='fanhao')}}">番号大全</a></li>
+  						<li><a href="{{url_for('main.category',longslug='cast')}}">女优排行</a></li>
+  						<li><a href="/tags">番号系列</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -243,6 +234,7 @@
 
           <div id="sidebar" class="3u">
             {% block sidebar %}
+            {% include theme('_search.html') %}
 
             {% set cate = None %}
             {% if article %}{% set cate = article.category %}{% endif %}

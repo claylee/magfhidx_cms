@@ -14,6 +14,8 @@ from flask import Flask, request, session, g, redirect, url_for, \
 def gethits():
     id = int(request.args.get('id', 0))
     article = Article.query.get(id)
+    print("----get hits-----")
+    print(id)
     if article:
         article.hits += 1
         db.session.add(article)

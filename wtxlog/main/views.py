@@ -241,8 +241,12 @@ def flatpage(template, slug):
 def search(template):
     page = int(request.args.get('page', 1))
     keyword = request.args.get('keyword', None)
+    keyword2 = request.form.get('keyword', None)
     pagination = None
     articles = None
+    print("keyword")
+    print(keyword)
+    print(keyword2)
     if keyword:
         _url = PageURL(url_for('main.search'),
                        {"page": page, "keyword": keyword.encode('utf-8')})

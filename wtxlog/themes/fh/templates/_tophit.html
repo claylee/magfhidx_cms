@@ -1,7 +1,7 @@
 {% with articles = get_top_articles(limit=15) %}
 {% if articles %}
 <header>
-<h2>Top 15 Posts</h2>
+<h2>热门文章</h2>
 </header>
 <ul>
   {%- for article in articles %}

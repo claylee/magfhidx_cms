@@ -46,12 +46,12 @@
 		margin-bottom: 3em;
 	}
 
-		#logo h1
+		#logo p
 		{
 			color: #FFF;
 		}
 
-		#logo h1 a
+		#logo p a
 		{
 			display: block;
 			letter-spacing: 1px;
