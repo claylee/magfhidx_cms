@@ -95,3 +95,23 @@ def read_ini_list(ini_file):
         cast_names.append(line)
     f.close()
     return cast_names
+
+
+@api.route('/push_article/<no>', methods=['GET','POST'])
+def push_article(no):
+    print(no)
+    data = request.get_data()
+    json_data = json.loads(data.decode("utf-8"))
+    print(json_data)
+    print('----------category-------------')
+    print(json_data['category'])
+    
+    print('----------tags-------------')
+
+    print(json_data['tags'])
+
+    print('----------topics-------------')
+
+    print(json_data['topics'])
+
+    return json.dumps(json_data)
