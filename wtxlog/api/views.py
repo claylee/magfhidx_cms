@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from flask import request
-from ..models import db, Article, Cast
+from ..models import db, Article, Cast, Category, Tag, Topic
 from . import api
 import json
 import codecs
 import os
+from datetime import datetime
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
+import sqlalchemy
+from sqlalchemy.ext.declarative import declarative_base,DeclarativeMeta
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Numeric
 
 
 @api.route('/gethits/')
@@ -102,16 +106,94 @@ def push_article(no):
     print(no)
     data = request.get_data()
     json_data = json.loads(data.decode("utf-8"))
-    print(json_data)
-    print('----------category-------------')
-    print(json_data['category'])
-    
-    print('----------tags-------------')
 
-    print(json_data['tags'])
+    article = Article()
+    article.slug = json_data['slug']
+    filter_fields = ['category','tags','topics']
 
-    print('----------topics-------------')
+    fill_by_json(article, json_data)
 
-    print(json_data['topics'])
+    db.session.add(article)
+    db.session.commit()
 
     return json.dumps(json_data)
+
+def fill_by_json(article, json_data, deep = 1, filter_fields = []):
+    deep +=1
+
+    if deep > 2:
+        return
+
+    cols = article.__table__.columns
+    for k in json_data:
+
+        if k in filter_fields:
+            continue
+
+        if not k in article.__table__.columns:
+            continue
+
+        if not hasattr(article,k) or k in filter_fields:
+            continue
+
+        col = cols[k]
+        if type(col.type) == DateTime:
+            #data=data.strftime('%Y-%m-%d %H:%M:%S')
+            print('sqltypes.DateTime')
+            setattr(article,k,datetime.strptime(json_data[k],'%Y-%m-%d %H:%M:%S'))
+        else:
+            setattr(article,k,json_data[k])
+
+        print(k,getattr(article,k),isinstance(getattr(article,k), datetime))
+
+    get_cate(article, json_data['category'])
+    get_tag(article, json_data['tags'])
+    get_topic(article, json_data['topics'])
+
+
+
+def get_cate(article, json_data):
+    cate = Category.query.filter(Category.name == json_data['name']).first()
+    if not cate:
+        cate = Category()
+        db.session.add(cate)
+        db.session.commit()
+    article.category_id = cate.id
+
+
+def get_topic(article, json_data):
+    topics = Topic.query.all()
+    db_topics =  {x.name:x for x in topics}
+
+    for tp in json_data:
+        topic = None
+        if not tp['name'] in db_topics:
+            topic = Topic()
+            topic.name = tp['name']
+            topic.slug = tp['name']
+            db.session.add(topic)
+            db.session.commit()
+        else:
+            topic = db_topics[tp['name']]
+
+        article.topics.append(topic)
+
+
+def get_tag(article, json_data):
+    tags = Tag.query.all()
+    db_tags =  {x.name:x for x in tags}
+    print(db_tags)
+    for tp in json_data:
+        tag = None
+        print("tag.['name']")
+        print(tp['name'])
+        print(db_tags[tp['name']])
+        if not tp['name'] in db_tags:
+            tag = Tag()
+            tag.name = tp['name']
+            db.session.add(tag)
+            db.session.commit()
+        else:
+            tag = db_tags[tp['name']]
+
+        article.tags.append(tag)
