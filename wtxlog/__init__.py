@@ -91,7 +91,7 @@ def create_app(config_name):
         return send_from_directory(app.static_folder, 'robots.txt')
 
     @app.route('/baidu_verify_mqk9WNvg2k.html')
-    def robotstxt():
+    def baidu_verify():
         return send_from_directory(app.static_folder, 'baidu_verify_mqk9WNvg2k.html')
 
     return app
