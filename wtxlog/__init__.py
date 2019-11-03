@@ -92,7 +92,6 @@ def create_app(config_name):
 
     @app.route('/baidu_verify_mqk9WNvg2k.html')
     def baidu_verify():
-        return send_from_directory(app.static_folder, 'baidu_verify_mqk9WNvg2k.html',
-            mimetype="text/plain" )
+        return "mqk9WNvg2k"
 
     return app
