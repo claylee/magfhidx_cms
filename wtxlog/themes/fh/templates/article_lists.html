@@ -18,19 +18,19 @@
     <div class="row">
       {%if article.category.name == "女优介绍"%}
         <div class="3u entry">
-          <img class="image full" src="{{article.thumbnail}}" alt="{{article.title}}"/>
+          <img class="image full lazy" data-original="{{article.thumbnail}}" alt="{{article.title}}"/>
         </div>
         <div class="9u">
           <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
-          {% if article.has_more %}<p><a class="button" href="{{ article.link }}" rel="nofollow">点击进入文章</a>{% endif %}
+          <p><a class="button" href="{{ article.link }}" rel="nofollow">点击进入文章</a>
         </div>
       {%else%}
         <div class="5u entry">
-          <img class="image full" src="{{article.thumbnail}}" alt="{{article.title}}"/>
+          <img class="image full lazy" data-original="{{article.thumbnail}}" alt="{{article.title}}"/>
         </div>
         <div class="7u">
           <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
-          {% if article.has_more %}<p><a class="button" href="{{ article.link }}" rel="nofollow">点击进入文章</a>{% endif %}
+          <p><a class="button" href="{{ article.link }}" rel="nofollow">点击进入文章</a>
         </div>
       {%endif%}
     </div>
