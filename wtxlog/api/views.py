@@ -103,18 +103,13 @@ def read_ini_list(ini_file):
 
 @api.route('/push_article/<no>', methods=['GET','POST'])
 def push_article(no):
-    print(no)
     data = request.get_data()
-    print("------data---------")
-    print(data)
     json_data = json.loads(data.decode("utf-8"))
 
     article = Article()
     article.slug = json_data['slug']
     filter_fields = ['category','tags','topics']
 
-    print("push_article---------")
-    print(json_data['category'])
     fill_by_json(article, json_data)
 
     db.session.add(article)
@@ -150,8 +145,6 @@ def fill_by_json(article, json_data, deep = 1, filter_fields = []):
 
         print(k,getattr(article,k),isinstance(getattr(article,k), datetime))
 
-    print(json_data)
-    print(json_data['category'])
     get_cate(article, json_data['category'])
     get_tag(article, json_data['tags'])
     get_topic(article, json_data['topics'])
@@ -188,12 +181,8 @@ def get_topic(article, json_data):
 def get_tag(article, json_data):
     tags = Tag.query.all()
     db_tags =  {x.name:x for x in tags}
-    print(db_tags)
     for tp in json_data:
         tag = None
-        print("tag.['name']")
-        print(tp['name'])
-        print(db_tags[tp['name']])
         if not tp['name'] in db_tags:
             tag = Tag()
             tag.name = tp['name']
