@@ -1,53 +1,217 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-  <head>
-    <title>{% block fulltitle%}{% block title %}{% endblock %}-{{ config['SITE_NAME'] }}{% endblock %}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-    <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-    <meta name="description" content="{% block description %}{% endblock %}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
-    <link rel="shortcut icon" href="{{ theme_static('mobile/favicon.png') }}" />
-    <link href="{{ url_for('main.feed') }}" rel="alternate" type="application/atom+xml" />
-    <link href="{{ theme_static('mobile/css/style.css') }}" rel="stylesheet" type="text/css" media="all" />
-    {% block head_extend %}{% endblock %}
-  </head>
-<body>
 
-{# 面包屑导航 #}
-{% macro nav_by_category(category) -%}
-<b>&#187;</b>{% for cate in category.parents -%}
-<a href="{{ cate.link }}">{{ cate.name }}</a>{% if not loop.last %}<b>&#187;</b>{% endif %}
-  {% endfor -%}
+<head>
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c172162b7200328b6768d10c226af3c5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <script>
+      window['skel-prefix'] = "{{ theme_static('iridium/css/style') }}";
+    </script>
+    <title>{% block title %}{% endblock %}-番号狗|fanhaogo</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="baidu-site-verification" content="mqk9WNvg2k" />
+    <meta name="baidu-site-verification" content="O7I5xwH4TH" />
+
+    <!-- Custom Theme files -->
+    <meta name="description" property="og:description" content="{% block metadesc %}{% endblock %}">
+    <meta name="keywords" content="{% block metakeywords %}{% endblock %}">
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- start menu -->
+    <meta name="referrer" content="{% block metareferrer %}{% endblock %}" />
+
+    <!--link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'-->
+    <link rel="stylesheet" href="{{ theme_static('iridium/css/google.font.family.css') }}" />
+    <!-- Custom Theme files -->
+    <!-- Monochromed -->
+    <!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
+    <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script-->
+    <script type='text/javascript' src="{{ theme_static('jquery-3.3.1.js') }}"></script>
+    <script type='text/javascript' src="{{ theme_static('jquery.lazyload.min.js') }}"></script>
+    <script src="{{ theme_static('iridium/js/skel.min.js') }}"></script>
+    <script src="{{ theme_static('iridium/js/skel-panels.min.js') }}"></script>
+    <script src="{{ theme_static('iridium/js/init.js') }}"></script>
+    <noscript>
+      <link rel="stylesheet" href="{{ theme_static('iridium/css/skel-noscript.css') }}" media="all" />
+      <link rel="stylesheet" href="{{ theme_static('iridium/css/style.css') }}" media="all"/>
+      <link rel="stylesheet" href="{{ theme_static('iridium/css/style-desktop.css') }}" media="all"/>
+    </noscript>
+    <style type="text/css">
+      #fhs>thead th
+      {
+        width:12px;
+        margin:4px;
+      }
+    </style>
+    <!--link href="https://v4.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet"-->
+
+    <!-- the jScrollPane script -->
+    <script language="javascript" type="text/javascript" src="{{ theme_static('js/util.js') }}"></script>
+</head>
+
+{# 面包屑导航开始 #}
+{# notself为真则不加链接，用于栏目页 #}
+{% macro nav_by_category(category, notself=False) -%}
+{% for cate in category.parents -%}
+{% if notself and cate == category %}{{ cate.name }}{% else %}<a href="{{ cate.link }}">{{ cate.name }}</a>{% endif %}{% if not loop.last %}<b>&#187;</b>{% endif %}
+{% endfor -%}
 {%- endmacro %}
 {# 面包屑导航结束 #}
 
-<a id="top" name="top"></a>
-{% block head %}
-<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{
-    url_for('main.index', _external=True) }}" title="{{
-config['SITE_NAME'] }}首页">首页</a><b>|</b><a href="{{
-url_for('main.topics') }}">专题</a><b>|</b><a href="{{
-url_for('main.tags') }}">栏目/标签</a><b>|</b><a href="{{ url_for('main.flatpage', slug='about') }}">关于</a></div>
-{% endblock %}
+{# LOGO部分代码开始 #}
+{% macro logo() -%}
+<a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a>
+{% endmacro %}
+{# LOGO部分代码结束 #}
 
-{% block main %}
-<form action="http://lusongsong.com/wap.asp" method="get">    <div class="srh">	<input type="hidden" name="act" value="Search">    <input type="search" class="i" name="q" value="" id="q">   <input type="submit" name="submit" value="搜">    </div></form>
+{# 定义导航菜单 #}
+{% set navigation_bar = [
+    (url_for('main.index'), 'index', 'Home'),
+    (url_for('main.category',longslug='女优介绍'), 'category.女优介绍', 'category.女优介绍'),
+    (url_for('main.tags'), 'tags', 'Tags'),
+    (url_for('main.flatpage', slug='about'), 'about', 'About'),
+] -%}
+{% set active_page = active_page|default('index') -%}
+<body class="homepage">
+    <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    </script>
 
-<ul> <li>
-<h3><a href="http://lusongsong.com/wap.asp?act=View&amp;id=1128">玩转论坛营销巧获永久自然流量</a></h3>
-<div class="s"><p>做论坛推广大家都会普遍的反映说，发帖很容易被删，所以会觉得论坛营销已经不行了，其实我到不这么看</p></div>
-<span class="a">2014-8-11 | 
-<a href="http://lusongsong.com/wap.asp?act=Main&amp;cate=3">SEO推广</a> | 
-<a href="http://lusongsong.com/wap.asp?act=Com&amp;id=1128">评论:46</a>
-</span>
-</li>
-</ul>
-{% endblock %}
+    <!-- Header -->
+			<div id="header">
+				<div class="container">
+        <!-- Logo -->
+          <div id="logo">
+            <p><a href="/">番号狗</a></p>
+            <span>番号狗</span>
+          </div>
+					<nav id="nav">
+						<ul>
+  						<li class="active"><a href="/">首页</a></li>
+  						<li><a href="{{url_for('main.category',longslug='fanhao')}}">番号大全</a></li>
+  						<li><a href="{{url_for('main.category',longslug='cast')}}">女优排行</a></li>
+  						<li><a href="/tags">番号系列</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
 
-{% block footer %}
-<div class="t2"><a href="{{ url_for('main.index') }}">首页</a>{% block nav %}{% endblock %}</div>
-<div id="ft">&copy;2014 - {{ config['SITE_NAME'] }} - <a href="#top">顶部</a></div>
-{% endblock %}
+    <!-- header -->
+    {% block header %}{% endblock%}
+    <!-- content -->
+  		<div id="main">
+  			<div class="container">
+
+        {% block crumbwrap %}<div class="crumb"><a href="{{ url_for('main.index') }}">Home</a><b>&#187;</b>{% block crumb %}{% endblock %}</div>{% endblock %}
+
+        <div class="ads-test">
+
+        </div>
+        <div class="row">
+          <div name='content' id="content" class="content 9u">
+          {% block main %}
+            <div class="article" id="article-1859">
+              <ul class="date">
+                <li class="day">13</li>
+                <li class="month">Oct</li>
+              </ul>
+
+              <div class="title">
+                <h2 class="topic"><a href="/archives/1859.html" rel="bookmark" title="Permanent Link to Ubuntu Tweak 0.8.6 正式发布：支持Ubuntu 13.10">Ubuntu Tweak 0.8.6 正式发布：支持Ubuntu 13.10</a></h2>
+                <span class="postmeta">Post by TualatriX at 2013 . Category: <a href="/archives/category/applications/">Applications</a>.  359 Views. <a href="/archives/1859.html#comments">2 Comments </a> </span></div>
+
+              <div class="clear"></div>
+              <div class="entry">
+
+                <p> <a href="/archives/1859.html#more-1859">Read More...</a>
+
+              </div>
+            </div>
+          {%endblock%}
+          </div>
+
+          <div id="sidebar" class="3u">
+            {% block sidebar %}
+            {% include theme('_search.html') %}
+
+            {% set cate = None %}
+            {% if article %}{% set cate = article.category %}{% endif %}
+            {% if category %}{% set cate = category %}{% endif %}
+
+            {% include theme('_recent.html') %}
+
+            {% include theme('_tophit.html') %}
+
+            {% with articles = get_recommend_articles(cate, limit=15) %}
+            {% if articles %}
+            <h2>Recommended Posts</h2>
+            <ul>
+              {%- for article in articles %}
+              <li><a href="{{ article.link|e }}" title="{{ article.title }}">{{ article.title|e }}</a></li>
+              {%- endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            {% with trees = category_tree() %}
+            {% if trees %}
+            <h2>Categories</h2>
+            <ul>
+              {%- for tree in trees %}
+              <li>{{ tree[0] * '----' }}<a href="{{ tree[1].link|e }}">{{ tree[1].name|e }}</a>({{ tree[1].count }})</li>
+              {%- endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <h2>Archives</h2>
+            <ul>
+              {%- for item in archives() %}
+              <li><a href="{{ url_for('main.archives', year=item.year, month=item.month)|e }}">{{ item|date('%B') }} {{ item|date('%Y') }}</a></li>
+              {%- endfor %}
+            </ul>
+
+            {# 友情链接 #}
+            {% block friendlinks %}{% endblock %}
+
+            {% block sidebar_other %}
+            <h2>Other</h2>
+            <ul>
+              <li><a rel="nofollow" href="{{ url_for('admin.index') }}">Admin</a></li>
+            </ul>
+            {% endblock %}
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    <!-- footer_top -->
+    <div id="footer">
+    {% block footertop %}
+    {% endblock%}
+    </div>
+    <script>
+      $(function() {
+          $("img.lazy").lazyload({effect: "fadeIn"});
+      });
+    </script>
 </body>
+
 </html>

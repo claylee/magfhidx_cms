@@ -1,0 +1,15 @@
+{% with articles = get_top_articles(limit=15) %}
+{% if articles %}
+<header>
+<h2>热门文章</h2>
+</header>
+<ul>
+  {%- for article in articles %}
+  <li>
+    <a href="{{ article.link|e }}" target="_blank"><img src="{{ article.thumbnail }}" alt="article.title" height="110"></a>
+    <a href="{{ article.link|e }}" title="{{ article.title }}">{{ article.title|e }}</a>
+  </li>
+  {%- endfor %}
+</ul>
+{% endif %}
+{% endwith %}

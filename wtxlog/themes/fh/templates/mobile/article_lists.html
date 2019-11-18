@@ -1,26 +1,49 @@
-{% if category %}<h2 class="t1">Category Archives: <b>{{ category.name }}</b></h2>{% endif %}
-{% if topic %}<h2 class="t1">Topic Archives: <b>{{ topic.name }}</b></h2>{% endif %}
-{% if tag %}<h2 class="t1">Tag Archives: <b>{{ tag.name }}</b></h2>{% endif %}
-{% if year or month %}<h2 class="t1">Monthly Archives: <b>{{ year }}-{{ month }}</b></h2>{% endif %}
+{% if category %}<header><h2 class="">Category Archives: {{ category.name }}</h2></header>{% endif %}
+{% if tag %}<header><h2 class="">Tag Archives: {{ tag.name }}</h2></header>{% endif %}
+{% if topic %}<header><h2 class="">Topic Archives: {{ topic.name }}</h2></header>{% endif %}
+{% if year or month %}<header><h2 class="">Monthly Archives: {{ year }}-{{ month }}</h2></header>{% endif %}
 {% if not keyword %}{% set keyword=None %}{% endif %}
 
 {% if articles %}
-  <ul>
   {% for article in articles %}
-  <li>
-  <h3><a class="keyword" href="{{ article.link }}">{{ article.title|emphasis(keyword)|safe }}</a></h3>
-  <div class="s keyword">{{ article.summary|emphasis(keyword)|safe }}</div>
-  <span class="a"> {{ article.created|date('%Y-%m-%d') }} | 
-  <a href="{{ article.category.link }}">{{ article.category.name }}</a>
-  </span>
-  </li>
+
+  <div class="post" id="article-{{ article.id }}">
+    <header class="title">
+      <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a class="keyword" href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title|emphasis(keyword)|safe }}</a></h2>
+      <p class="postmeta byline">{{article.created|date('%Y') }}年{{ article.created|date('%m') }}月{{ article.created|date('%d') }}日. 分类: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
+      {{ article.hits }} 次浏览.</p>
+    </header>
+
+    <div class="clear"></div>
+    <div class="row">
+      {%if article.category.name == "女优介绍"%}
+        <div class="3u entry">
+          <img class="image full lazy" data-original="{{article.thumbnail}}" alt="{{article.title}}"/>
+        </div>
+        <div class="9u">
+          <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
+          <p><a class="button" href="{{ article.link }}" rel="nofollow">点击进入文章</a>
+        </div>
+      {%else%}
+        <div class="5u entry">
+          <img class="image full lazy" data-original="{{article.thumbnail}}" alt="{{article.title}}"/>
+        </div>
+        <div class="7u">
+          <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
+          <p><a class="button" href="{{ article.link }}" rel="nofollow">点击进入文章</a>
+        </div>
+      {%endif%}
+    </div>
+  </div>
+  <hr/>
+  <div class="clear"></div>
   {% endfor %}
-  </ul>
 {% else %}
   <p>没有内容</p>
 {% endif %}
 
 {% if pagination and pagination.page_count > 1 %}
-<div class="page">{{ pagination.pager('$link_first $link_previous ~1~ $link_next $link_last') }}</div>
+<div class="pagenavi">
+{{ pagination.pager('$link_first $link_previous ~2~ $link_next $link_last (Page $page/$page_count)') }}
+</div>
 {% endif %}
-

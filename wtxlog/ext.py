@@ -194,11 +194,13 @@ class WtxlogCache(FlaskCache):
                         raise
                     current_app.logger.exception("Exception possibly due to cache backend.")
                     return f(*args, **kwargs)
+                print("cache_")
                 print(cache_key)
                 print(cache_key)
                 print(cache_key)
                 print(cache_key)
                 print(args)
+                print("kwargs")
                 print(kwargs)
 
                 if rv is None:

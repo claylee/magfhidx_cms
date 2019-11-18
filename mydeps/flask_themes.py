@@ -117,6 +117,7 @@ class Theme(object):
         """
         The absolute path to the theme's templates directory.
         """
+        print('--ltemplates_path')
         return os.path.join(self.path, 'templates')
 
     @cached_property
@@ -289,6 +290,7 @@ def get_theme(ident):
 
     :param ident: The theme identifier.
     """
+    print('--get_theme')
     ctx = _request_ctx_stack.top
     return ctx.app.theme_manager.themes[ident]
 
@@ -466,6 +468,9 @@ def render_theme_template(theme, template_name, _fallback=True, **context):
     :param template_name: The name of the template to render.
     :param _fallback: Whether to fall back to the default
     """
+    print('--render_theme_template')
+    print(theme)
+    print(template_name)
     if isinstance(theme, Theme):
         theme = theme.identifier
     context['_theme'] = theme

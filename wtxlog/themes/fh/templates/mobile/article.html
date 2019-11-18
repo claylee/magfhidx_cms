@@ -1,49 +1,86 @@
-{% extends theme('mobile/layout.html') %}
+{% extends theme('layout.html') %}
 
 {% block title %}{{ article.seotitle or article.title }}{% endblock %}
 
 {% block head_extend -%}
+  <link href="{{ theme_static('css/highlight-default.css') }}" rel="stylesheet" type="text/css" media="all" />
+  <meta name="author" content="{% block author %}{{ article.author }}{% endblock %}" />
   <link rel="canonical" href="{{ article.link }}" />
+  <meta name="mobile-agent" content="format=html5;url={{ article.link }}"/>
+  <meta name="mobile-agent" content="format=xhtml;url={{ article.link }}"/>
   {% if article.get_prev %}<link rel="prev" title="{{ article.get_prev.title }}" href="{{ article.get_prev.link }}" />{% endif %}
   {% if article.get_next %}<link rel="next" title="{{ article.get_next.title}}" href="{{ article.get_next.link }}" />{% endif %}
 {%- endblock %}
 
+{% block crumb %}{{ nav_by_category(article.category) }}<b>&#187;</b>{{ article.title }}{% endblock %}
+
 {% block main %}
+<div class="post" id="article-{{ article.id }}">
+  <div class="title">
+    <header>
+      <h1 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
+    </header>
+    <p class="postmeta">{{article.created|date('%Y') }}年{{ article.created|date('%m') }}月{{ article.created|date('%d') }}日 Post by
+{{ article.author }} . 分类: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
+    {{ article.hits }} Views.</p>
+  </div>
 
-<h2 class="t1">{{ article.title }}</h2>
-<p class="a"> {{ article.created|date('%Y-%m-%d') }} | <a  href="{{ article.category.link }}">{{ article.category.name }}</a></p>
-<div class="content">
-{{ article.body_html|safe }}
+  <div class="clear"></div>
+    {{ article.summary|safe }}
+  <div class="clear"></div>
+  <div class="entry">
+    {{ article.body_html|safe }}
 
-{% if article.tags %}
-<p>标签: &nbsp; {% for tag in article.tags %}<a href="{{ tag.link }}">{{ tag.name }}</a>{%if not loop.last %},&nbsp;{% endif %}{% endfor %}. </p>
-{% endif %}
-{% if article.topic %}
-<p>专题: &nbsp; <a href="{{ article.topic.link }}">{{ article.topic.name }}</a></p>
-{% endif %}
+    <p>本文链接: <a href="{{ article.link }}" title="{{ article.title }}">{{ article.link }}</a> <br/>
+    </p>
 
-</div>
-
-<div id="m">
-{% if article.get_prev or article.get_next %}
-  <h3>相邻文章:</h3>
-  <ul>
-  {% if article.get_prev %}<li>上一篇: <a href="{{ article.get_prev.link }}">{{ article.get_prev.title }}</a></li>{% endif %}
-  {% if article.get_next %}<li>下一篇: <a href="{{ article.get_next.link }}">{{ article.get_next.title }}</a></li>{% endif %}
-  </ul>
-{% endif %}
-
-  {% with related = get_related_articles(article.id, 15) %}
-    {% if related %}
-    <h3>相关文章:</h3>
-    <ul>
-      {% for article in related %}<li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a> ({{ article.created|date('%Y-%m-%d') }})</li>{% endfor %}
-    </ul>
+    {% if article.tags %}
+    <div id="tags">Tags: &nbsp; {% for tag in article.tags %}<a href="{{ tag.link }}">{{ tag.name }}</a>{%if not loop.last %},&nbsp;{% endif %}{% endfor %}. </div>
     {% endif %}
-  {% endwith %}
+
+    {% if article.topic %}
+    <p>专题: &nbsp; <a href="{{ article.topic.link }}">{{ article.topic.name }}</a></p>
+    {% endif %}
+
+    <!-- UJian Button BEGIN -->
+    <div class="ujian-hook"></div>
+    <!-- UJian Button END -->
+
+  </div>
 </div>
+
+  <div class="b-pingback">
+    {% if article.get_prev %}<li class="b-meta">Prev: <a href="{{ article.get_prev.link }}">{{ article.get_prev.title }}</a></li>{% endif %}
+    {% if article.get_next %}<li class="b-meta">Next: <a href="{{ article.get_next.link }}">{{ article.get_next.title }}</a></li>{% endif %}
+  </div>
+
+<!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<!-- UY END -->
 
 {% endblock %}
 
-{% block nav %}{{ nav_by_category(article.category) }}<b>&#187;</b>正文{% endblock %}
+{% block sidebar_other -%}
+<div id="box">
+  <div id="float" class="div1">
+    {% with related = get_related_articles(article.id, 15) %}
+      {% if related %}
+      <h2>Related Posts</h2>
+      <ul>
+        {% for article in related -%}<li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>{%- endfor %}
+      </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>
+{%- endblock %}
 
+{% block tail -%}
+  <!-- UY BEGIN -->
+  <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1685977"></script>
+  <script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?uid=1685977"></script>
+  <!-- UY END -->
+  <script>gethits({{ article.id }}, 'articlehits');</script>
+  <script src="{{ theme_static('js/highlight.min.js') }}"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+{%- endblock %}
